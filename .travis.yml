@@ -1,9 +1,26 @@
+dist: trusty
+sudo: false
 language: node_js
-node_js: 'node'
-
+node_js:
+  - '9'
+addons:
+  chrome: stable
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 cache:
   directories:
-    - node_modules
+    - './node_modules'
+install:
+  - npm install
+  - npm install -g @angular/cli
 
 script:
-  - npm run all
+  - export CHROME_BIN=chromium-browser
+  - xvfb-run -a npm run test -- --browsers=ChromeNoSandbox --code-coverage --watch=false
+  - xvfb-run -a npm run e2e --
+
+before_script:
+  - ng lint
