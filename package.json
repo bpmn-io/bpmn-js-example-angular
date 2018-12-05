@@ -1,0 +1,19 @@
+{
+  "name": "bpmn-js-example-angular",
+  "version": "0.0.0",
+  "description": "An example how to integrate bpmn-js with an Angular application",
+  "scripts": {
+    "all": "echo \"hello world\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bpmn-io/bpmn-js-example-angular.git"
+  },
+  "keywords": [
+    "Angular",
+    "bpmn-js",
+    "example"
+  ],
+  "license": "MIT"
+}
