@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "all": "ng lint && npm run test-ci && npm run e2e-ci",
+    "all": "ng lint && npm run test && npm run e2e",
     "build": "ng build",
     "e2e": "ng e2e",
     "e2e-ci": "ng e2e --protractor-config=./e2e/protractor-ci.conf.js",
