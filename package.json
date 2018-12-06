@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "description": "An example how to integrate bpmn-js with an Angular application",
   "scripts": {
-    "all": "echo \"hello world\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "all": "run-s lint build test e2e",
+    "build": "cd bpmn-js-app && npm run build",
+    "e2e": "cd bpmn-js-app && npm run e2e",
+    "lint": "cd bpmn-js-app && npm run lint",
+    "postinstall": "cd bpmn-js-app && npm install",
+    "test": "cd bpmn-js-app && npm test -- --watch=false --browsers=Firefox"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,8 @@
     "bpmn-js",
     "example"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }
