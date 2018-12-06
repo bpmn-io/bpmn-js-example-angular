@@ -5,11 +5,28 @@
 An example how to integrate bpmn-js with an [Angular](https://angular.io/) application.
 
 
-## Integrate
+## Prerequisites
 
 Assume you bootstrapped your application using the `ng` command:
 
-```
-ng new bpmn-js-app
+```sh
+ng new bpmn-js-app --defaults=true
 cd bpmn-js-app
 ```
+
+
+## Integrating bpmn-js
+
+_TODO_
+
+
+## Test the Example
+
+```sh
+npm install
+npm run all
+```
+
+## License
+
+MIT
