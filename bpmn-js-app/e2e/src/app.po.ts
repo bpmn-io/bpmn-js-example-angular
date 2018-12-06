@@ -5,7 +5,7 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getTitleText() {
-    return element(by.css('app-root h1')).getText();
+  getDiagramContainer() {
+    return element(by.css('app-root .diagram-container'));
   }
 }
