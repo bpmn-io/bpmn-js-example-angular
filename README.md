@@ -17,7 +17,49 @@ cd bpmn-js-app
 
 ## Integrating bpmn-js
 
-_TODO_
+Create a component similar to [`DiagramComponent`](./bpmn-js-app/src/app/diagram/diagram.component.ts):
+
+```typescript
+import {
+  AfterContentInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+
+import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+
+@Component({
+  selector: 'app-diagram',
+  template: `<div #ref class="diagram-container"></div>`,
+  styles: `
+    .diagram-container {
+      height: 100%;
+      width: 100%;
+    }
+  `
+})
+export class DiagramComponent implements AfterContentInit, OnDestroy {
+
+  // instantiate BpmnJS with component
+  private viewer: BpmnJS = new BpmnJS();
+
+  // retrieve DOM element reference
+  @ViewChild('ref') private el: ElementRef;
+
+  ngAfterContentInit(): void {
+    // attach BpmnJS instance to DOM element
+    this.viewer.attachTo(this.el.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    // destroy BpmnJS instance
+    this.viewer.destroy();
+  }
+
+}
+```
 
 
 ## Test the Example
@@ -26,6 +68,7 @@ _TODO_
 npm install
 npm run all
 ```
+
 
 ## License
 
