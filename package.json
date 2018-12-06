@@ -8,6 +8,7 @@
     "e2e": "cd bpmn-js-app && npm run e2e -- --protractorConfig=e2e/protractor-ci.conf.js",
     "lint": "cd bpmn-js-app && npm run lint",
     "postinstall": "cd bpmn-js-app && npm install",
+    "start": "cd bpmn-js-app && npm start",
     "test": "cd bpmn-js-app && npm test -- --watch=false --no-progress --browsers=ChromeHeadlessCI"
   },
   "repository": {
