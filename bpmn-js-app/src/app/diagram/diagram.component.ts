@@ -1,77 +1,59 @@
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
   OnDestroy,
-  OnChanges,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 
+import { HttpClient } from '@angular/common/http';
+import { map, catchError, retry } from 'rxjs/operators';
+
+// why not use the modeler? IMO it makes for a more interesting example - your call -> // import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
-  template: `<div #ref class="diagram-container"></div>`,
-  styles: [ `
-    .diagram-container {
-      height: 100%;
-      width: 100%;
-    }
-  ` ]
+  template: `
+    <div #ref class="diagram-container"></div>
+  `,
+  styles: [
+    `
+      .diagram-container {
+        height: 100%;
+        width: 100%;
+      }
+    `
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DiagramComponent implements AfterContentInit, OnDestroy, OnChanges {
-
+export class DiagramComponent implements AfterContentInit, OnDestroy {
   private viewer: BpmnJS = new BpmnJS();
-
-  private destroyed: Boolean = false;
-
-  private whenLoaded: Promise<Object>;
 
   @ViewChild('ref') private el: ElementRef;
 
   @Input() private url: String;
 
-  ngOnChanges(changes: SimpleChanges) {
-    if ('url' in changes) {
-      this.whenLoaded = this.loadUrl(changes['url'].currentValue);
-    }
-  }
+  constructor(private http: HttpClient) {}
 
   ngAfterContentInit(): void {
     this.viewer.attachTo(this.el.nativeElement);
+    this.loadUrl(this.url).subscribe();
   }
 
   ngOnDestroy(): void {
     this.viewer.destroy();
-
-    this.destroyed = true;
   }
 
-  loadUrl(url): Promise<Object> {
-    return (
-      fetch(url)
-        .then(response => response.text())
-        .then(xml => this.openDiagram(xml))
+  loadUrl(url) {
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map((xml: string) => this.viewer.importXML(xml)),
+      retry(3),
+      catchError(err => throwError(err))
     );
   }
-
-  openDiagram(xml): Promise<Object> {
-    return new Promise((resolve, reject) => {
-      if (this.destroyed) {
-        return reject(new Error('component instance destroyed'));
-      }
-
-      this.viewer.importXML(xml, (err) => {
-
-        if (err) {
-          return reject(err);
-        }
-
-        return resolve({});
-      });
-    });
-  }
-
 }
