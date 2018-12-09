@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { DiagramComponent } from './diagram/diagram.component';
 
@@ -9,6 +10,7 @@ describe('AppComponent', () => {
         AppComponent,
         DiagramComponent
       ],
+      imports: [HttpClientTestingModule]
     }).compileComponents();
   }));
 
