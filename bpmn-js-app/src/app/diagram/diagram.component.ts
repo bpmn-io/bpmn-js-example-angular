@@ -50,7 +50,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.url) {
+    if (changes.url) {
       this.loadUrl();
     }
   }
@@ -66,12 +66,12 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
       catchError(err => throwError(err))
     ).subscribe(
       xml => {
-        this.viewer.importXML(xml)
-        this.importError.emit('')
+        this.viewer.importXML(xml);
+        this.importError.emit('');
       },
       err => {
-        console.error(err)
-        this.importError.emit('ERROR: diagram did not load - please check the console.')
+        console.error(err);
+        this.importError.emit('ERROR: diagram did not load - please check the console.');
       }
     );
   }
