@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
   ViewChild,
@@ -35,11 +36,11 @@ import { throwError } from 'rxjs';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DiagramComponent implements AfterContentInit, OnDestroy {
+export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
   private viewer: BpmnJS = new BpmnJS();
 
   @ViewChild('ref') private el: ElementRef;
-  @Output() private error: EventEmitter<any> = new EventEmitter();
+  @Output() private importError: EventEmitter<any> = new EventEmitter();
   @Input() private url: string;
 
   constructor(private http: HttpClient) {}
@@ -64,10 +65,13 @@ export class DiagramComponent implements AfterContentInit, OnDestroy {
       retry(3),
       catchError(err => throwError(err))
     ).subscribe(
-      xml => this.viewer.importXML(xml),
+      xml => {
+        this.viewer.importXML(xml)
+        this.importError.emit('')
+      },
       err => {
         console.error(err)
-        this.error.emit('ERROR: diagram did not load - please check the console.')
+        this.importError.emit('ERROR: diagram did not load - please check the console.')
       }
     );
   }
