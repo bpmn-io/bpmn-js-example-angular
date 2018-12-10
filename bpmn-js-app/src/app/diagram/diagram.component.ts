@@ -5,7 +5,10 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  ViewChild
+  Output,
+  ViewChild,
+  SimpleChanges,
+  EventEmitter
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
@@ -36,25 +39,36 @@ export class DiagramComponent implements AfterContentInit, OnDestroy {
   private viewer: BpmnJS = new BpmnJS();
 
   @ViewChild('ref') private el: ElementRef;
-
-  @Input() private url: String;
+  @Output() private error: EventEmitter<any> = new EventEmitter();
+  @Input() private url: string;
 
   constructor(private http: HttpClient) {}
 
   ngAfterContentInit(): void {
     this.viewer.attachTo(this.el.nativeElement);
-    this.loadUrl(this.url).subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.url) {
+      this.loadUrl();
+    }
   }
 
   ngOnDestroy(): void {
     this.viewer.destroy();
   }
 
-  loadUrl(url) {
-    return this.http.get(url, { responseType: 'text' }).pipe(
-      map((xml: string) => this.viewer.importXML(xml)),
+  loadUrl() {
+    this.http.get(this.url, { responseType: 'text' }).pipe(
+      map((xml: string) => xml),
       retry(3),
       catchError(err => throwError(err))
+    ).subscribe(
+      xml => this.viewer.importXML(xml),
+      err => {
+        console.error(err)
+        this.error.emit('ERROR: diagram did not load - please check the console.')
+      }
     );
   }
 }

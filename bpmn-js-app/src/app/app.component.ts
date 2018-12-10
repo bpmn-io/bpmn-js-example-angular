@@ -6,6 +6,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  title = 'bpmn-js-angular';
-  diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
+  public title = 'bpmn-js-angular';
+  public diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
+  public errorMsg = '';
+
+  public showErrorMsg(errorMsg) {
+    this.errorMsg = errorMsg
+  }
 }
