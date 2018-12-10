@@ -9,7 +9,7 @@ const diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/sta
 describe('DiagramComponent', () => {
   let httpMock: HttpTestingController;
   let fixture: ComponentFixture<DiagramComponent>;
-  let diagram: DebugNode['componentInstance'];
+  let component: DebugNode['componentInstance'];
 
   const injector: TestBed = getTestBed();
 
@@ -19,12 +19,12 @@ describe('DiagramComponent', () => {
       declarations: [DiagramComponent]
     });
     fixture = TestBed.createComponent(DiagramComponent);
-    diagram = fixture.debugElement.componentInstance;
+    component = fixture.debugElement.componentInstance;
   }));
 
   describe('create', () => {
     it('should create and tear down', () => {
-      expect(diagram).toBeTruthy();
+      expect(component).toBeTruthy();
       fixture.destroy();
     });
   });
@@ -32,9 +32,9 @@ describe('DiagramComponent', () => {
   describe('#loadUrl', () => {
     it('makes a get request to an XML file', () => {
       httpMock = injector.get(HttpTestingController);
-
-      spyOn(diagram, 'loadUrl').and.callThrough();
-      diagram.loadUrl(diagramUrl).subscribe();
+      component.url = diagramUrl;
+      spyOn(component, 'loadUrl').and.callThrough();
+      component.loadUrl(diagramUrl);
       const req = httpMock.expectOne(diagramUrl);
       expect(req.request.method).toBe('GET');
     });
