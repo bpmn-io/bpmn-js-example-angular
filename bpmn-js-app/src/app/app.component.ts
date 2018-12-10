@@ -11,6 +11,7 @@ export class AppComponent {
   public errorMsg = '';
 
   public showErrorMsg(errorMsg) {
+    console.log('errorMsg')
     this.errorMsg = errorMsg
   }
 }
