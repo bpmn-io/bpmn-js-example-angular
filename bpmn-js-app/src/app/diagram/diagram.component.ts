@@ -15,8 +15,6 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { map, catchError, retry } from 'rxjs/operators';
 
-// why not use the modeler? IMO it makes for a more interesting example
-// import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
 
 import { throwError } from 'rxjs';
