@@ -41,11 +41,10 @@ describe('DiagramComponent', () => {
 
   it('makes a successful get request and clears any existing error messages', () => {
     component.url = diagramUrl;
-
     spyOn(component, 'loadUrl').and.callThrough();
     component.loadUrl(diagramUrl);
-    const req = httpMock.expectOne(diagramUrl);
-    expect(req.request.method).toBe('GET');
+
+    httpMock.expectOne({url: diagramUrl, method: 'GET'});
     expect(component.errorMessage).toEqual('');
   });
 
