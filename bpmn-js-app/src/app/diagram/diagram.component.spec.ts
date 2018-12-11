@@ -39,16 +39,17 @@ describe('DiagramComponent', () => {
     fixture.destroy();
   });
 
-  it('makes a successful get request and emits an error message', () => {
+  it('makes a successful get request and clears any existing error messages', () => {
     component.url = diagramUrl;
 
     spyOn(component, 'loadUrl').and.callThrough();
     component.loadUrl(diagramUrl);
     const req = httpMock.expectOne(diagramUrl);
     expect(req.request.method).toBe('GET');
+    expect(component.errorMessage).toEqual('');
   });
 
-  it('makes an unsuccessful get request and emits an error message', () => {
+  it('makes an unsuccessful get request and sets an error message', () => {
     component.url = null;
     spyOn(component, 'loadUrl').and.callThrough();
     spyOn(console, 'error');
