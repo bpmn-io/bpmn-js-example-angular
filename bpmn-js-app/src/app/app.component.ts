@@ -10,7 +10,10 @@ export class AppComponent {
   public diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
   public errorMsg = '';
 
-  public showErrorMsg(errorMsg) {
+  public handleImportStatus(errorMsg) {
     this.errorMsg = errorMsg;
+    if (!errorMsg.length) {
+      console.log(`%cIMPORT SUCCESS: \n${this.diagramUrl}`, 'color: green');
+    }
   }
 }
