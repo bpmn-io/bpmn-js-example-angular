@@ -11,7 +11,7 @@
 <div class="error-msg" *ngIf="errorMsg.length">{{errorMsg}}</div>
 
 <div class="diagram-parent">
-  <app-diagram [url]="diagramUrl" (importError)="showErrorMsg($event)"></app-diagram>
+  <app-diagram [url]="diagramUrl" (importComplete)="handleImportStatus($event)"></app-diagram>
 </div>
 
 <p>

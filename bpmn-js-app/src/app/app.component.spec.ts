@@ -1,9 +1,13 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
 import { DiagramComponent } from './diagram/diagram.component';
+import { DebugNode } from '@angular/core';
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: DebugNode['componentInstance'];
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -12,13 +16,23 @@ describe('AppComponent', () => {
       ],
       imports: [HttpClientTestingModule]
     }).compileComponents();
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
   }));
 
 
   it('should create', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
+  });
+
+  it('renders a diagram component', () => {
+    expect(fixture.nativeElement.querySelector('app-diagram')).toBeTruthy();
+  });
+
+  it('sets an error message', () => {
+    component.handleImportStatus('ERROR');
+    expect(component.errorMsg).toEqual('ERROR');
   });
 
 });

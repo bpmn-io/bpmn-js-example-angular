@@ -36,9 +36,10 @@ import { throwError } from 'rxjs';
 })
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
   private viewer: BpmnJS = new BpmnJS();
+  private errorMessage = '';
 
   @ViewChild('ref') private el: ElementRef;
-  @Output() private importError: EventEmitter<any> = new EventEmitter();
+  @Output() private importComplete: EventEmitter<any> = new EventEmitter();
   @Input() private url: string;
 
   constructor(private http: HttpClient) {}
@@ -65,11 +66,13 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
     ).subscribe(
       xml => {
         this.viewer.importXML(xml);
-        this.importError.emit('');
+        this.errorMessage = '';
+        this.importComplete.emit(this.errorMessage);
       },
       err => {
         console.error(err);
-        this.importError.emit('ERROR: diagram did not load - please check the console.');
+        this.errorMessage = 'ERROR: diagram did not load - please check the console.';
+        this.importComplete.emit(this.errorMessage);
       }
     );
   }
