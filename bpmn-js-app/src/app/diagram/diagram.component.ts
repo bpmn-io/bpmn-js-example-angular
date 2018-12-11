@@ -59,6 +59,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   }
 
   loadUrl() {
+    // Note: there's no need to unsubscribe from finite observables e.g. httpclient
     this.http.get(this.url, { responseType: 'text' }).pipe(
       map((xml: string) => xml),
       retry(3),
