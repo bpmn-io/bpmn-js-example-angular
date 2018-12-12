@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -15,7 +14,14 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { map, catchError, retry } from 'rxjs/operators';
 
+/**
+ * You may include a different variant of BpmnJS, i.e. the BPMN modeler
+ * in the same way, too. Checkout https://unpkg.com/bpmn-js/dist/ for
+ * a list of pre-packed BpmnJS variants to include in your application.
+ */
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+
+import { importDiagram } from './rx';
 
 import { throwError } from 'rxjs';
 
@@ -31,50 +37,66 @@ import { throwError } from 'rxjs';
         width: 100%;
       }
     `
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  ]
 })
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
-  private viewer: BpmnJS = new BpmnJS();
-  private errorMessage = '';
+  private bpmnJS: BpmnJS;
 
   @ViewChild('ref') private el: ElementRef;
-  @Output() private importComplete: EventEmitter<any> = new EventEmitter();
+  @Output() private importDone: EventEmitter<any> = new EventEmitter();
+
   @Input() private url: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+
+    this.bpmnJS = new BpmnJS();
+
+    this.bpmnJS.on('import.done', ({ error }) => {
+      if (!error) {
+        this.bpmnJS.get('canvas').zoom('fit-viewport');
+      }
+    });
+  }
 
   ngAfterContentInit(): void {
-    this.viewer.attachTo(this.el.nativeElement);
+    this.bpmnJS.attachTo(this.el.nativeElement);
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // re-import whenever the url changes
     if (changes.url) {
-      this.loadUrl();
+      this.loadUrl(changes.url.currentValue);
     }
   }
 
   ngOnDestroy(): void {
-    this.viewer.destroy();
+    this.bpmnJS.destroy();
   }
 
-  loadUrl() {
-    // Note: there's no need to unsubscribe from finite observables e.g. httpclient
-    this.http.get(this.url, { responseType: 'text' }).pipe(
-      map((xml: string) => xml),
-      retry(3),
-      catchError(err => throwError(err))
-    ).subscribe(
-      xml => {
-        this.viewer.importXML(xml);
-        this.errorMessage = '';
-        this.importComplete.emit(this.errorMessage);
-      },
-      err => {
-        console.error(err);
-        this.errorMessage = 'ERROR: diagram did not load - please check the console.';
-        this.importComplete.emit(this.errorMessage);
-      }
+  /**
+   * Load diagram from URL and emit completion event
+   */
+  loadUrl(url: string) {
+
+    return (
+      this.http.get(url, { responseType: 'text' }).pipe(
+        catchError(err => throwError(err)),
+        importDiagram(this.bpmnJS)
+      ).subscribe(
+        (warnings) => {
+          this.importDone.emit({
+            type: 'success',
+            warnings
+          });
+        },
+        (err) => {
+          this.importDone.emit({
+            type: 'error',
+            error: err
+          });
+        }
+      )
     );
   }
+
 }

@@ -1,19 +1,32 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public title = 'bpmn-js-angular';
-  public diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
-  public errorMsg = '';
+  title = 'bpmn-js-angular';
+  diagramUrl = 'https://cdn.rawgit.com/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
+  importError?: Error;
 
-  public handleImportStatus(errorMsg) {
-    this.errorMsg = errorMsg;
-    if (!errorMsg.length) {
-      console.log(`%cIMPORT SUCCESS: \n${this.diagramUrl}`, 'color: green');
+  handleImported(event) {
+
+    const {
+      type,
+      error,
+      warnings
+    } = event;
+
+    if (type === 'success') {
+      console.log(`Rendered diagram (%s warnings)`, warnings.length);
     }
+
+    if (type === 'error') {
+      console.error('Failed to render diagram', error);
+    }
+
+    this.importError = error;
   }
+
 }

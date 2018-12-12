@@ -5,6 +5,7 @@ import { DiagramComponent } from './diagram/diagram.component';
 import { DebugNode } from '@angular/core';
 
 describe('AppComponent', () => {
+
   let fixture: ComponentFixture<AppComponent>;
   let component: DebugNode['componentInstance'];
 
@@ -26,13 +27,21 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+
   it('renders a diagram component', () => {
     expect(fixture.nativeElement.querySelector('app-diagram')).toBeTruthy();
   });
 
+
   it('sets an error message', () => {
-    component.handleImportStatus('ERROR');
-    expect(component.errorMsg).toEqual('ERROR');
+    const error = new Error('ERROR');
+
+    component.handleImported({
+      type: 'error',
+      error
+    });
+
+    expect(component.importError).toEqual(error);
   });
 
 });

@@ -8,10 +8,13 @@
   In fringilla suscipit odio quis tincidunt. Morbi felis elit, blandit a volutpat eget, rutrum ut mi. Duis ac orci at nibh semper vehicula. Quisque vulputate, nibh vitae laoreet convallis, urna erat imperdiet eros, et interdum arcu arcu ac risus. Maecenas in tellus nisi. Mauris quis lectus luctus, condimentum orci eu, rhoncus sapien. Aliquam at lobortis mauris, eget facilisis arcu. Quisque metus purus, rhoncus et tortor id, ornare maximus neque. Donec et ex tincidunt, malesuada lacus in, volutpat eros. Cras nisi arcu, dapibus quis odio sit amet, placerat blandit elit. Nullam at dictum mauris. Nulla feugiat elit ex, a pulvinar velit faucibus a. Nulla tincidunt velit purus, in faucibus ligula ornare venenatis.
 </p>
 
-<div class="error-msg" *ngIf="errorMsg.length">{{errorMsg}}</div>
-
 <div class="diagram-parent">
-  <app-diagram [url]="diagramUrl" (importComplete)="handleImportStatus($event)"></app-diagram>
+  <app-diagram [url]="diagramUrl" (importDone)="handleImported($event)"></app-diagram>
+
+  <div class="import-error" *ngIf="importError">
+    <strong>Failed to render diagram: </strong>
+    {{ importError.message }}
+  </div>
 </div>
 
 <p>
