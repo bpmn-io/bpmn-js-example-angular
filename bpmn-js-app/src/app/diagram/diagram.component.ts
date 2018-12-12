@@ -15,11 +15,13 @@ import { HttpClient } from '@angular/common/http';
 import { map, catchError, retry } from 'rxjs/operators';
 
 /**
- * You may include a different variant of BpmnJS, i.e. the BPMN modeler
- * in the same way, too. Checkout https://unpkg.com/bpmn-js/dist/ for
- * a list of pre-packed BpmnJS variants to include in your application.
+ * You may include a different variant of BpmnJS:
+ *
+ * Viewer  - displays BPMN diagrams without the ability
+ *           to navigate them
+ * Modeler - bootstraps a full-fledged BPMN editor
  */
-import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+import BpmnJS from 'bpmn-js/lib/NavigatedViewer';
 
 import { importDiagram } from './rx';
 
