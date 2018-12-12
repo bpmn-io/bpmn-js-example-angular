@@ -10,8 +10,6 @@ export const importDiagram = (bpmnJS) => <Object>(source: Observable<string>) =>
     const subscription = source.subscribe({
       next(xml: string) {
 
-        console.log('IMPORT DIAGRAM');
-
         // canceling the subscription as we are interested
         // in the first diagram to display only
         subscription.unsubscribe();
