@@ -29,6 +29,13 @@ import {
   ViewChild
 } from '@angular/core';
 
+/**
+ * You may include a different variant of BpmnJS:
+ *
+ * bpmn-viewer  - displays BPMN diagrams without the ability
+ *                to navigate them
+ * bpmn-modeler - bootstraps a full-fledged BPMN editor
+ */
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
 
 @Component({
