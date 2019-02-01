@@ -36,7 +36,7 @@ import {
  *                to navigate them
  * bpmn-modeler - bootstraps a full-fledged BPMN editor
  */
-import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+import * as BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
 
 @Component({
   selector: 'app-diagram',

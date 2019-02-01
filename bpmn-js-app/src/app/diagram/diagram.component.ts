@@ -17,11 +17,11 @@ import { map, catchError, retry } from 'rxjs/operators';
 /**
  * You may include a different variant of BpmnJS:
  *
- * Viewer  - displays BPMN diagrams without the ability
- *           to navigate them
- * Modeler - bootstraps a full-fledged BPMN editor
+ * bpmn-viewer  - displays BPMN diagrams without the ability
+ *                to navigate them
+ * bpmn-modeler - bootstraps a full-fledged BPMN editor
  */
-import BpmnJS from 'bpmn-js/lib/NavigatedViewer';
+import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
 
 import { importDiagram } from './rx';
 
