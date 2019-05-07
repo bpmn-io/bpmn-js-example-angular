@@ -51,7 +51,9 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
 
   constructor(private http: HttpClient) {
 
-    this.bpmnJS = new BpmnJS();
+    this.bpmnJS = new BpmnJS({
+      keyboard: { bindTo: document }
+    });
 
     this.bpmnJS.on('import.done', ({ error }) => {
       if (!error) {
