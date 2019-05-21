@@ -51,9 +51,7 @@ import * as BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
 export class DiagramComponent implements AfterContentInit, OnDestroy {
 
   // instantiate BpmnJS with component
-  private viewer: BpmnJS = new BpmnJS({
-      keyboard: { bindTo: document }
-    });
+  private viewer: BpmnJS = new BpmnJS();
 
   // retrieve DOM element reference
   @ViewChild('ref') private el: ElementRef;
