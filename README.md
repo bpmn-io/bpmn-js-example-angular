@@ -77,6 +77,11 @@ npm install
 npm run all
 ```
 
+## Additional Resources
+
+* [bpmn-js-viewer Documentation](https://github.com/bpmn-io/bpmn-js/blob/master/lib/Viewer.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/blob/master/starter/viewer.html)
+* [bpmn-js-modeler Documentation](https://github.com/bpmn-io/bpmn-js/blob/master/lib/Modeler.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/tree/master/modeler)
+* [How to add Keyboard-Bindings](https://forum.bpmn.io/t/hotkeys-like-the-demo/89/2?u=niklas_kiefer) ([cf. Keyboard-Service](https://github.com/bpmn-io/diagram-js/blob/master/lib/features/keyboard/Keyboard.js))
 
 ## License
 
