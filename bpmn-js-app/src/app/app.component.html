@@ -1,6 +1,6 @@
 <div fxLayout="column">
   <div class="row">
-    <h1>Add bpmn-js to Angular</h1>
+    <h1>bpmn-js Angular example</h1>
     <form fxLayout="row">
       <mat-form-field>
         <input name="diagramUrl" [(ngModel)]="diagramUrl" matInput placeholder="Diagram URL" type="text">
@@ -9,12 +9,7 @@
     </form>
   </div>
   <div class="diagram-parent">
-    <app-diagram (importDone)="handleImported($event)" [url]="diagramUrl"></app-diagram>
-
-    <div *ngIf="importError" class="import-error">
-      <strong>Failed to render diagram: </strong>
-      {{ importError.message }}
-    </div>
+    <app-diagram [url]="diagramUrl"></app-diagram>
   </div>
 </div>
 

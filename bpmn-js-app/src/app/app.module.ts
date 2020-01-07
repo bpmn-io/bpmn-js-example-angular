@@ -21,10 +21,10 @@ import {DiagramComponent} from './diagram/diagram.component';
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
-    MatInputModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent]
 })

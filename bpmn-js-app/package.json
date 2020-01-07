@@ -26,6 +26,8 @@
     "bpmn-js-properties-panel": "^0.33.1",
     "camunda-bpmn-moddle": "^4.3.0",
     "core-js": "^2.6.11",
+    "diagram-js-minimap": "^2.0.3",
+    "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

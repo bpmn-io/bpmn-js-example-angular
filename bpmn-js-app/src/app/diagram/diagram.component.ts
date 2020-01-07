@@ -1,24 +1,22 @@
 import {HttpClient} from '@angular/common/http';
 import {
-  AfterContentInit,
+  AfterContentInit, AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
-  Input,
+  Input, NgZone,
   OnChanges,
-  OnDestroy,
+  OnDestroy, OnInit,
   Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-/**
- * You may include a different variant of BpmnJS:
- *
- * bpmn-viewer  - displays BPMN diagrams without the ability
- *                to navigate them
- * bpmn-modeler - bootstraps a full-fledged BPMN editor
- */
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
+import {ControlValueAccessor} from '@angular/forms';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
+import propertiesPanelModule from 'bpmn-js-properties-panel';
+import minimapModule from 'diagram-js-minimap';
+import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
+import * as camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda.json';
 
 import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -27,70 +25,124 @@ import {ImportEvent} from '../interfaces/import-event';
 
 import {importDiagram} from './rx';
 
+import * as fileSaver from 'file-saver';
 
 @Component({
   selector: 'app-diagram',
   templateUrl: 'diagram.component.html',
   styleUrls: ['diagram.component.scss'],
 })
-export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
-  private bpmnJS: BpmnJS;
+export class DiagramComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+  @ViewChild('containerRef', {static: true}) containerRef: ElementRef;
+  @ViewChild('propertiesRef', {static: true}) propertiesRef: ElementRef;
+  @Input() url: string;
+  private disabled = false;
+  private modeler: BpmnModeler;
+  private _value = '';
 
-  @ViewChild('ref', {static: true}) private el: ElementRef;
-  @Output() private importDone: EventEmitter<ImportEvent> = new EventEmitter();
+  constructor(
+    private zone: NgZone,
+  ) {
+  }
 
-  @Input() private url: string;
-
-  constructor(private http: HttpClient) {
-
-    this.bpmnJS = new BpmnJS();
-
-    this.bpmnJS.on('import.done', ({error}) => {
-      if (!error) {
-        this.bpmnJS.get('canvas').zoom('fit-viewport');
+  ngOnInit() {
+    this.modeler = new BpmnModeler({
+      container: this.containerRef.nativeElement,
+      propertiesPanel: {
+        parent: this.propertiesRef.nativeElement,
+      },
+      additionalModules: [
+        propertiesProviderModule,
+        propertiesPanelModule,
+        minimapModule,
+      ],
+      moddleExtensions: {
+        camunda: camundaModdleDescriptor
       }
     });
+
+    this.modeler.get('eventBus').on('commandStack.changed', () => this.saveDiagram());
   }
 
-  ngAfterContentInit(): void {
-    this.bpmnJS.attachTo(this.el.nativeElement);
+  ngAfterViewInit() {
+    this.openDiagram(this._value);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // re-import whenever the url changes
-    if (changes.url) {
-      this.loadUrl(changes.url.currentValue);
+  onChange = (value: any) => {
+  }
+
+  onTouched = () => {
+  }
+
+  get value(): any {
+    return this._value;
+  }
+
+  // Allows Angular to update the model.
+  // Update the model and changes needed for the view here.
+  writeValue(value: any): void {
+    if (value !== this._value) {
+      this.openDiagram(value);
     }
+    this._value = value;
+    this.onChange(this.value);
   }
 
-  ngOnDestroy(): void {
-    this.bpmnJS.destroy();
+  // Allows Angular to register a function to call when the model changes.
+  // Save the function as a property to call later here.
+  registerOnChange(fn: (rating: number) => void): void {
+    this.onChange = fn;
   }
 
-  /**
-   * Load diagram from URL and emit completion event
-   */
-  loadUrl(url: string) {
+  // Allows Angular to register a function to call when the input has been touched.
+  // Save the function as a property to call later here.
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
 
-    return (
-      this.http.get(url, {responseType: 'text'}).pipe(
-        catchError(err => throwError(err)),
-        importDiagram(this.bpmnJS)
-      ).subscribe(
-        (warnings: BpmnWarning[]) => {
-          this.importDone.emit({
-            type: 'success',
-            warnings: warnings
-          });
-        },
-        (err) => {
-          this.importDone.emit({
-            type: 'error',
-            error: err
-          });
-        }
-      )
+  // Allows Angular to disable the input.
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  createNewDiagram() {
+    this.openDiagram();
+  }
+
+  openDiagram(xml?: string) {
+    return this.zone.run(
+      () => xml ?
+        this.modeler.importXML(xml, err => this.onImport(err)) :
+        this.modeler.createDiagram(err => this.onImport(err))
     );
   }
 
+  saveSVG() {
+    this.saveDiagram();
+    this.modeler.saveSVG((err, svg) => {
+      const blob = new Blob([svg], {type: 'image/svg+xml'});
+      fileSaver.saveAs(blob, `BPMN Diagram - ${new Date().toISOString()}.svg`);
+    });
+  }
+
+  saveDiagram() {
+    this.modeler.saveXML({format: true}, (err, xml) => {
+      this._value = xml;
+      this.writeValue(xml);
+    });
+  }
+
+  saveXML() {
+    this.saveDiagram();
+    this.modeler.saveXML({format: true}, (err, xml) => {
+      const blob = new Blob([xml], {type: 'text/xml'});
+      fileSaver.saveAs(blob, `BPMN Diagram - ${new Date().toISOString()}.xml`);
+    });
+  }
+
+  onImport(err?: Error) {
+    if (err) {
+      return console.error('could not import BPMN 2.0 diagram', err);
+    }
+  }
 }

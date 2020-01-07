@@ -1,4 +1,8 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~bpmn-js/dist/assets/diagram-js.css';
+@import '~bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+@import '~bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
+@import '~diagram-js-minimap/assets/diagram-js-minimap.css';
 
 html, body {
   height: 100%;
