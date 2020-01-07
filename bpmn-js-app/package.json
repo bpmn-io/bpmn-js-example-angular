@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "bpmn-js": "^3.5.0",
+    "bpmn-js-properties-panel": "^0.33.1",
+    "camunda-bpmn-moddle": "^4.3.0",
     "core-js": "^2.6.11",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.5.4",
