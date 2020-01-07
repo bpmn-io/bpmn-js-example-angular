@@ -10,11 +10,13 @@ import {ImportEvent} from './interfaces/import-event';
 export class AppComponent {
   title = 'bpmn-js-angular';
   diagramUrl = 'https://cdn.staticaly.com/gh/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
+  urlToLoad: string;
   importError?: Error;
   xmlModel: any;
 
   constructor() {
     this.xmlModel = BPMN_DIAGRAM;
+    this.urlToLoad = this.diagramUrl;
   }
 
   handleImported(event: ImportEvent) {
@@ -39,6 +41,7 @@ export class AppComponent {
 
   onSubmit(event: MouseEvent) {
     console.log('onSubmit event', event);
+    this.urlToLoad = this.diagramUrl;
   }
 
 }

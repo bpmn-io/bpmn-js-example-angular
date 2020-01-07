@@ -32,16 +32,19 @@ import * as fileSaver from 'file-saver';
   templateUrl: 'diagram.component.html',
   styleUrls: ['diagram.component.scss'],
 })
-export class DiagramComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+export class DiagramComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges {
   @ViewChild('containerRef', {static: true}) containerRef: ElementRef;
   @ViewChild('propertiesRef', {static: true}) propertiesRef: ElementRef;
+  @Output() private importDone: EventEmitter<ImportEvent> = new EventEmitter();
   @Input() url: string;
+
   private disabled = false;
   private modeler: BpmnModeler;
   private _value = '';
 
   constructor(
     private zone: NgZone,
+    private http: HttpClient,
   ) {
   }
 
@@ -62,10 +65,24 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
     });
 
     this.modeler.get('eventBus').on('commandStack.changed', () => this.saveDiagram());
+
+    this.modeler.on('import.done', ({error}) => {
+      if (!error) {
+        this.modeler.get('canvas').zoom('fit-viewport');
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.openDiagram(this._value);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('changes', changes);
+    // re-import whenever the url changes
+    if (changes.url) {
+      this.loadUrl(changes.url.currentValue);
+    }
   }
 
   onChange = (value: any) => {
@@ -144,5 +161,31 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
     if (err) {
       return console.error('could not import BPMN 2.0 diagram', err);
     }
+  }
+
+  /**
+   * Load diagram from URL and emit completion event
+   */
+  loadUrl(url: string) {
+    console.log('loadUrl url', url);
+    return (
+      this.http.get(url, {responseType: 'text'}).pipe(
+        catchError(err => throwError(err)),
+        importDiagram(this.modeler)
+      ).subscribe(
+        (warnings: BpmnWarning[]) => {
+          this.importDone.emit({
+            type: 'success',
+            warnings: warnings
+          });
+        },
+        (err) => {
+          this.importDone.emit({
+            type: 'error',
+            error: err
+          });
+        }
+      )
+    );
   }
 }
