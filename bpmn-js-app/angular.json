@@ -133,5 +133,10 @@
       }
     }
   },
-  "defaultProject": "bpmn-js-angular"
+  "defaultProject": "bpmn-js-angular",
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  }
 }

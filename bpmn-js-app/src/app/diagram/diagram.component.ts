@@ -1,19 +1,16 @@
+import {HttpClient} from '@angular/common/http';
 import {
   AfterContentInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild,
   SimpleChanges,
-  EventEmitter
+  ViewChild
 } from '@angular/core';
-
-import { HttpClient } from '@angular/common/http';
-import { map, catchError, retry } from 'rxjs/operators';
-
 /**
  * You may include a different variant of BpmnJS:
  *
@@ -23,28 +20,20 @@ import { map, catchError, retry } from 'rxjs/operators';
  */
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
 
-import { importDiagram } from './rx';
+import {throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
-import { throwError } from 'rxjs';
+import {importDiagram} from './rx';
 
 @Component({
   selector: 'app-diagram',
-  template: `
-    <div #ref class="diagram-container"></div>
-  `,
-  styles: [
-    `
-      .diagram-container {
-        height: 100%;
-        width: 100%;
-      }
-    `
-  ]
+  templateUrl: 'diagram.component.html',
+  styleUrls: ['diagram.component.scss'],
 })
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
   private bpmnJS: BpmnJS;
 
-  @ViewChild('ref', { static: true }) private el: ElementRef;
+  @ViewChild('ref', {static: true}) private el: ElementRef;
   @Output() private importDone: EventEmitter<any> = new EventEmitter();
 
   @Input() private url: string;
@@ -53,7 +42,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
 
     this.bpmnJS = new BpmnJS();
 
-    this.bpmnJS.on('import.done', ({ error }) => {
+    this.bpmnJS.on('import.done', ({error}) => {
       if (!error) {
         this.bpmnJS.get('canvas').zoom('fit-viewport');
       }
@@ -81,7 +70,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   loadUrl(url: string) {
 
     return (
-      this.http.get(url, { responseType: 'text' }).pipe(
+      this.http.get(url, {responseType: 'text'}).pipe(
         catchError(err => throwError(err)),
         importDiagram(this.bpmnJS)
       ).subscribe(
