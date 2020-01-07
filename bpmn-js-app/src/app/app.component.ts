@@ -29,4 +29,10 @@ export class AppComponent {
     this.importError = error;
   }
 
+  onSubmit(event: MouseEvent) {
+    console.log('onSubmit event', event);
+
+
+  }
+
 }

@@ -1,8 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { DiagramComponent } from './diagram/diagram.component';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { AppComponent } from './app.component';
+import {HttpClientModule} from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AppComponent} from './app.component';
+import {DiagramComponent} from './diagram/diagram.component';
 
 @NgModule({
   declarations: [
@@ -10,9 +16,17 @@ import { AppComponent } from './app.component';
     DiagramComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
-    HttpClientModule
+    FlexLayoutModule,
+    FormsModule,
+    HttpClientModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

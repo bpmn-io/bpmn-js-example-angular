@@ -1,14 +1,21 @@
 .diagram-parent {
-  height: 400px;
-  border: solid 3px #EEE;
+  height: 75vh;
   position: relative;
+  border-top: 1px solid #CCCCCC;
 }
 
 .import-error {
   color: red;
   padding: 20px;
-
   position: absolute;
   top: 0;
   left: 0;
+}
+
+form {
+  padding: 2rem;
+}
+
+mat-form-field {
+  width: 800px;
 }
