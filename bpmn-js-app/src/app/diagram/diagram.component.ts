@@ -22,8 +22,11 @@ import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
 
 import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {BpmnWarning} from '../interfaces/bpmn-warning';
+import {ImportEvent} from '../interfaces/import-event';
 
 import {importDiagram} from './rx';
+
 
 @Component({
   selector: 'app-diagram',
@@ -34,7 +37,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   private bpmnJS: BpmnJS;
 
   @ViewChild('ref', {static: true}) private el: ElementRef;
-  @Output() private importDone: EventEmitter<any> = new EventEmitter();
+  @Output() private importDone: EventEmitter<ImportEvent> = new EventEmitter();
 
   @Input() private url: string;
 
@@ -74,10 +77,10 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
         catchError(err => throwError(err)),
         importDiagram(this.bpmnJS)
       ).subscribe(
-        (warnings) => {
+        (warnings: BpmnWarning[]) => {
           this.importDone.emit({
             type: 'success',
-            warnings
+            warnings: warnings
           });
         },
         (err) => {

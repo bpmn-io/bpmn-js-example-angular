@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ImportEvent} from './interfaces/import-event';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ export class AppComponent {
   diagramUrl = 'https://cdn.staticaly.com/gh/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
   importError?: Error;
 
-  handleImported(event) {
+  handleImported(event: ImportEvent) {
+    console.log('handleImported event', event);
 
     const {
       type,
