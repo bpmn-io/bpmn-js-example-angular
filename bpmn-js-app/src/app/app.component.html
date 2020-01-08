@@ -1,15 +1,23 @@
+<mat-toolbar [ngClass]="{'expanded': showOpenFileDialog}">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="diagram.createNewDiagram()" title="Create new BPMN diagram"><mat-icon>insert_drive_file</mat-icon></button>
+    <button mat-icon-button (click)="showOpenFileDialog = !showOpenFileDialog" title="Open diagram"><mat-icon>folder</mat-icon></button>
+    <button mat-icon-button (click)="diagram.saveDiagram()" title="Save diagram"><mat-icon>save</mat-icon></button>
+    <button mat-icon-button (click)="diagram.saveSVG()" title="Export as SVG image"><mat-icon>image</mat-icon></button>
+    <button mat-icon-button (click)="diagram.saveXML()" title="Export as XML"><mat-icon>code</mat-icon></button>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="showOpenFileDialog">
+    <mat-form-field>
+      <input name="diagramUrl" [(ngModel)]="diagramUrl" matInput placeholder="Open diagram from URL" type="text">
+    </mat-form-field>
+    <button mat-icon-button (click)="onSubmit($event)"><mat-icon>arrow_forward</mat-icon></button>
+    <span fxFlex></span>
+    <button mat-icon-button (click)="showOpenFileDialog = false"><mat-icon>close</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
 <div fxLayout="column">
-  <div class="row">
-    <h1>bpmn-js Angular example</h1>
-    <form fxLayout="row">
-      <mat-form-field>
-        <input name="diagramUrl" [(ngModel)]="diagramUrl" matInput placeholder="Diagram URL" type="text">
-      </mat-form-field>
-      <button mat-mini-fab color="primary" (click)="onSubmit($event)"><mat-icon>sync</mat-icon></button>
-    </form>
-  </div>
   <div class="diagram-parent">
-    <app-diagram (importDone)="handleImported($event)"></app-diagram>
+    <app-diagram #diagram (importDone)="handleImported($event)"></app-diagram>
 
     <div *ngIf="importError" class="import-error">
       <strong>Failed to render diagram: </strong>

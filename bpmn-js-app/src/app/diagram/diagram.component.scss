@@ -1,4 +1,16 @@
 .modeler-wrapper {
   height: 100%;
   width: 100%;
+
+  ::ng-deep .djs-minimap:not(.open) .toggle:before {
+    font-family: 'Material Icons';
+    content: "map";
+    font-size: 24px;
+  }
+
+  ::ng-deep .djs-minimap.open .toggle:before {
+    font-family: 'Material Icons';
+    content: "close";
+    font-size: 24px;
+  }
 }

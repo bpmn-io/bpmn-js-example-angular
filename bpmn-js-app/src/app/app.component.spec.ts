@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../testing/mocks/diagram.mocks';
 import {BpmnWarning} from './_interfaces/bpmn-warning';
@@ -30,6 +31,7 @@ describe('AppComponent', () => {
         FormsModule,
         MatIconModule,
         MatInputModule,
+        MatToolbarModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         HttpClientTestingModule,

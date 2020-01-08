@@ -16,6 +16,7 @@ export class AppComponent {
   importWarnings?: BpmnWarning[];
   xmlModel: any;
   @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
+  showOpenFileDialog = false;
 
   constructor() {
     this.xmlModel = BPMN_DIAGRAM;
@@ -41,7 +42,7 @@ export class AppComponent {
   }
 
   onSubmit(event: MouseEvent) {
+    this.showOpenFileDialog = false;
     this.diagramComponent.loadUrl(this.diagramUrl);
   }
-
 }
