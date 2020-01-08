@@ -63,7 +63,7 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
         minimapModule,
       ],
       moddleExtensions: {
-        camunda: camundaModdleDescriptor
+        camunda: camundaModdleDescriptor['default']
       }
     });
 
