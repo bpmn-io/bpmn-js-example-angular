@@ -8,9 +8,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../testing/mocks/diagram.mocks';
+import {BpmnWarning} from './_interfaces/bpmn-warning';
 import {AppComponent} from './app.component';
 import {DiagramComponent} from './diagram/diagram.component';
-import {BpmnWarning} from './interfaces/bpmn-warning';
 
 
 describe('AppComponent', () => {

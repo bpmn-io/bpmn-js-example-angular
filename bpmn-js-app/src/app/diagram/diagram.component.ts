@@ -1,4 +1,4 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {AfterViewInit, Component, ElementRef, EventEmitter, NgZone, Output, ViewChild} from '@angular/core';
 import {ControlValueAccessor} from '@angular/forms';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
@@ -8,13 +8,9 @@ import * as camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda.
 import minimapModule from 'diagram-js-minimap';
 
 import * as fileSaver from 'file-saver';
-
-import {throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {BpmnWarning} from '../interfaces/bpmn-warning';
-import {ImportEvent} from '../interfaces/import-event';
-
-import {importDiagram} from './rx';
+import {BpmnWarning} from '../_interfaces/bpmn-warning';
+import {ImportEvent} from '../_interfaces/import-event';
+import {ApiService} from '../_services/api.service';
 
 @Component({
   selector: 'app-diagram',
@@ -30,7 +26,7 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
 
   constructor(
     private zone: NgZone,
-    private http: HttpClient,
+    private api: ApiService,
   ) {
   }
 
@@ -150,18 +146,9 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
    * Load diagram from URL and emit completion event
    */
   loadUrl(url: string) {
-    return (
-      this.http
-        .get(url, {responseType: 'text'})
-        .pipe(
-          catchError(err => throwError(err)),
-          importDiagram(this.modeler)
-        )
-        .subscribe(
-          w => this._handleWarnings(w),
-          e => this._handleErrors(e)
-        )
-    );
+    this.api.getBpmnXml(url).subscribe(xml => {
+      this.openDiagram(xml);
+    }, error => this._handleErrors(error));
   }
 
   private _handleWarnings(warnings: BpmnWarning[]) {

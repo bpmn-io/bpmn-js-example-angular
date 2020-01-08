@@ -92,8 +92,9 @@
             ],
             "codeCoverageExclude": [
               "src/testing/mocks/*.ts",
-              "src/app/interfaces/*.ts",
-              "src/polyfills.ts"
+              "src/app/_interfaces/*.ts",
+              "src/polyfills.ts",
+              "src/test.ts"
             ]
           }
         },

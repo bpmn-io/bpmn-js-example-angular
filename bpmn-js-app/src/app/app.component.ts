@@ -1,8 +1,8 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {BPMN_DIAGRAM} from '../testing/mocks/diagram.mocks';
+import {BpmnWarning} from './_interfaces/bpmn-warning';
+import {ImportEvent} from './_interfaces/import-event';
 import {DiagramComponent} from './diagram/diagram.component';
-import {BpmnWarning} from './interfaces/bpmn-warning';
-import {ImportEvent} from './interfaces/import-event';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +10,12 @@ import {ImportEvent} from './interfaces/import-event';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
   title = 'bpmn-js-angular';
   diagramUrl = 'https://cdn.staticaly.com/gh/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
   importError?: Error;
   importWarnings?: BpmnWarning[];
   xmlModel: any;
+  @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
 
   constructor() {
     this.xmlModel = BPMN_DIAGRAM;

@@ -1,21 +1,13 @@
-import {
-  async,
-  ComponentFixture,
-  getTestBed,
-  TestBed
-} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
-import { DebugNode } from '@angular/core';
-
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
+import {DebugNode} from '@angular/core';
+import {async, ComponentFixture, getTestBed, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
-import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../../testing/mocks/diagram.mocks';
-
-import { DiagramComponent } from './diagram.component';
 import * as FileSaver from 'file-saver';
+import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../../testing/mocks/diagram.mocks';
+import {ApiService} from '../_services/api.service';
+
+import {DiagramComponent} from './diagram.component';
 
 describe('DiagramComponent', () => {
 
@@ -31,7 +23,8 @@ describe('DiagramComponent', () => {
         HttpClientTestingModule,
         MatIconModule,
       ],
-      declarations: [DiagramComponent]
+      declarations: [DiagramComponent],
+      providers: [ApiService]
     });
 
     fixture = TestBed.createComponent(DiagramComponent);
@@ -70,7 +63,7 @@ describe('DiagramComponent', () => {
     // when
     component.loadUrl(diagramURL);
 
-    const request = httpMock.expectOne({ url: diagramURL, method: 'GET' });
+    const request = httpMock.expectOne({url: diagramURL, method: 'GET'});
 
     request.flush(BPMN_DIAGRAM);
   });
@@ -94,7 +87,7 @@ describe('DiagramComponent', () => {
     // when
     component.loadUrl(diagramURL);
 
-    const request = httpMock.expectOne({ url: diagramURL, method: 'GET' });
+    const request = httpMock.expectOne({url: diagramURL, method: 'GET'});
 
     request.flush(BPMN_DIAGRAM_WITH_WARNINGS);
   });
@@ -112,12 +105,12 @@ describe('DiagramComponent', () => {
 
       // then
       expect(result.type).toEqual('error');
-      expect(result.error.message).toEqual('Http failure response for some-url: 404 FOO');
+      expect(result.error).toEqual('Http failure response for some-url: 404 FOO');
 
       done();
     });
 
-    const request = httpMock.expectOne({ url: diagramURL, method: 'GET' });
+    const request = httpMock.expectOne({url: diagramURL, method: 'GET'});
 
     request.flush('Not Found', {
       status: 404,
@@ -166,6 +159,35 @@ describe('DiagramComponent', () => {
 
     component.writeValue(BPMN_DIAGRAM);
     expect(importXMLSpy).toHaveBeenCalled();
+  });
+
+  it('should register onChange function', () => {
+    const fn = (s: string) => s.toLowerCase().trim();
+    const input = '   TRIMMED AND LOWERCASED   ';
+
+    component.registerOnChange(fn);
+    expect(component.onChange).toEqual(fn);
+
+    const result = component.onChange(input);
+    expect(result).toEqual('trimmed and lowercased');
+  });
+
+  it('should register onTouched function', () => {
+    const fn = () => 123456;
+
+    component.registerOnTouched(fn);
+    expect(component.onTouched).toEqual(fn);
+
+    const result = component.onTouched();
+    expect(result).toEqual(123456);
+  });
+
+  it('should set disabled state', () => {
+    component.setDisabledState(true);
+    expect(component.disabled).toEqual(true);
+
+    component.setDisabledState(false);
+    expect(component.disabled).toEqual(false);
   });
 
 });
