@@ -11,10 +11,11 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
+import {MatIconModule} from '@angular/material/icon';
 import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../../testing/mocks/diagram.mocks';
 
 import { DiagramComponent } from './diagram.component';
-
+import * as FileSaver from 'file-saver';
 
 describe('DiagramComponent', () => {
 
@@ -26,7 +27,10 @@ describe('DiagramComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        MatIconModule,
+      ],
       declarations: [DiagramComponent]
     });
 
@@ -38,7 +42,6 @@ describe('DiagramComponent', () => {
 
   afterEach(() => {
     httpMock.verify();
-
     fixture.destroy();
   });
 
@@ -54,6 +57,7 @@ describe('DiagramComponent', () => {
     const diagramURL = 'some-url';
 
     component.importDone.subscribe(result => {
+
       // then
       expect(result).toEqual({
         type: 'success',
@@ -119,6 +123,49 @@ describe('DiagramComponent', () => {
       status: 404,
       statusText: 'FOO'
     });
+  });
+
+  it('should save diagram as SVG', () => {
+    const fileSaverSpy = spyOn(FileSaver, 'saveAs').and.stub();
+    component.saveSVG();
+    expect(fileSaverSpy).toHaveBeenCalled();
+  });
+
+  it('should save diagram as XML', () => {
+    const fileSaverSpy = spyOn(FileSaver, 'saveAs').and.stub();
+    component.saveXML();
+    expect(fileSaverSpy).toHaveBeenCalled();
+  });
+
+  it('should create a new diagram', () => {
+    const importXMLSpy = spyOn(component.modeler, 'importXML').and.stub();
+    component.createNewDiagram();
+    expect(importXMLSpy).toHaveBeenCalled();
+  });
+
+  it('should open an existing diagram from XML', () => {
+    const importXMLSpy = spyOn(component.modeler, 'importXML').and.stub();
+    component.openDiagram(BPMN_DIAGRAM);
+    expect(importXMLSpy).toHaveBeenCalled();
+  });
+
+  it('should fail to open diagram', (done) => {
+    component.openDiagram('INVALID BPMN XML');
+    component.importDone.subscribe(result => {
+      expect(result.type).toEqual('error');
+      expect(result.error.message).toContain('unparsable content INVALID BPMN XML detected');
+      done();
+    });
+  });
+
+  it('should edit diagram', () => {
+    const importXMLSpy = spyOn(component.modeler, 'importXML').and.stub();
+    const createDiagramSpy = spyOn(component.modeler, 'createDiagram').and.stub();
+    component.createNewDiagram();
+    expect(createDiagramSpy).toHaveBeenCalled();
+
+    component.writeValue(BPMN_DIAGRAM);
+    expect(importXMLSpy).toHaveBeenCalled();
   });
 
 });

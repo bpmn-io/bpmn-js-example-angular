@@ -9,7 +9,7 @@
     </form>
   </div>
   <div class="diagram-parent">
-    <app-diagram [url]="urlToLoad" (importDone)="handleImported($event)"></app-diagram>
+    <app-diagram (importDone)="handleImported($event)"></app-diagram>
 
     <div *ngIf="importError" class="import-error">
       <strong>Failed to render diagram: </strong>

@@ -1,22 +1,13 @@
-import {HttpClient} from '@angular/common/http';
-import {
-  AfterContentInit, AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input, NgZone,
-  OnChanges,
-  OnDestroy, OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {AfterViewInit, Component, ElementRef, EventEmitter, NgZone, Output, ViewChild} from '@angular/core';
 import {ControlValueAccessor} from '@angular/forms';
-import BpmnModeler from 'bpmn-js/lib/Modeler';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
-import minimapModule from 'diagram-js-minimap';
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/camunda';
+import BpmnModeler from 'bpmn-js/lib/Modeler';
 import * as camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda.json';
+import minimapModule from 'diagram-js-minimap';
+
+import * as fileSaver from 'file-saver';
 
 import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -25,22 +16,17 @@ import {ImportEvent} from '../interfaces/import-event';
 
 import {importDiagram} from './rx';
 
-import * as fileSaver from 'file-saver';
-
 @Component({
   selector: 'app-diagram',
   templateUrl: 'diagram.component.html',
   styleUrls: ['diagram.component.scss'],
 })
-export class DiagramComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges {
+export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
   @ViewChild('containerRef', {static: true}) containerRef: ElementRef;
   @ViewChild('propertiesRef', {static: true}) propertiesRef: ElementRef;
   @Output() private importDone: EventEmitter<ImportEvent> = new EventEmitter();
-  @Input() url: string;
-
   private disabled = false;
   private modeler: BpmnModeler;
-  private _value = '';
 
   constructor(
     private zone: NgZone,
@@ -48,7 +34,24 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
   ) {
   }
 
-  ngOnInit() {
+  private _value = '';
+
+  get value(): any {
+    return this._value;
+  }
+
+  ngAfterViewInit() {
+    this.initializeModeler();
+    this.openDiagram(this._value);
+  }
+
+  onChange(value: any) {
+  }
+
+  onTouched() {
+  }
+
+  initializeModeler() {
     this.modeler = new BpmnModeler({
       container: this.containerRef.nativeElement,
       propertiesPanel: {
@@ -71,28 +74,6 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
         this.modeler.get('canvas').zoom('fit-viewport');
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.openDiagram(this._value);
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('changes', changes);
-    // re-import whenever the url changes
-    if (changes.url) {
-      this.loadUrl(changes.url.currentValue);
-    }
-  }
-
-  onChange = (value: any) => {
-  }
-
-  onTouched = () => {
-  }
-
-  get value(): any {
-    return this._value;
   }
 
   // Allows Angular to update the model.
@@ -129,8 +110,8 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
   openDiagram(xml?: string) {
     return this.zone.run(
       () => xml ?
-        this.modeler.importXML(xml, err => this.onImport(err)) :
-        this.modeler.createDiagram(err => this.onImport(err))
+        this.modeler.importXML(xml, (e, w) => this.onImport(e, w)) :
+        this.modeler.createDiagram((e, w) => this.onImport(e, w))
     );
   }
 
@@ -157,9 +138,11 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
     });
   }
 
-  onImport(err?: Error) {
+  onImport(err?: HttpErrorResponse, warnings?: BpmnWarning[]) {
     if (err) {
-      return console.error('could not import BPMN 2.0 diagram', err);
+      this._handleErrors(err);
+    } else {
+      this._handleWarnings(warnings);
     }
   }
 
@@ -167,25 +150,32 @@ export class DiagramComponent implements ControlValueAccessor, OnInit, AfterView
    * Load diagram from URL and emit completion event
    */
   loadUrl(url: string) {
-    console.log('loadUrl url', url);
     return (
-      this.http.get(url, {responseType: 'text'}).pipe(
-        catchError(err => throwError(err)),
-        importDiagram(this.modeler)
-      ).subscribe(
-        (warnings: BpmnWarning[]) => {
-          this.importDone.emit({
-            type: 'success',
-            warnings: warnings
-          });
-        },
-        (err) => {
-          this.importDone.emit({
-            type: 'error',
-            error: err
-          });
-        }
-      )
+      this.http
+        .get(url, {responseType: 'text'})
+        .pipe(
+          catchError(err => throwError(err)),
+          importDiagram(this.modeler)
+        )
+        .subscribe(
+          w => this._handleWarnings(w),
+          e => this._handleErrors(e)
+        )
     );
   }
+
+  private _handleWarnings(warnings: BpmnWarning[]) {
+    this.importDone.emit({
+      type: 'success',
+      warnings: warnings
+    });
+  }
+
+  private _handleErrors(err) {
+    this.importDone.emit({
+      type: 'error',
+      error: err
+    });
+  }
+
 }

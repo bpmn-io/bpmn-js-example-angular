@@ -7,9 +7,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {BPMN_DIAGRAM} from '../testing/mocks/diagram.mocks';
+import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../testing/mocks/diagram.mocks';
 import {AppComponent} from './app.component';
 import {DiagramComponent} from './diagram/diagram.component';
+import {BpmnWarning} from './interfaces/bpmn-warning';
 
 
 describe('AppComponent', () => {
@@ -21,7 +22,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
-        DiagramComponent
+        DiagramComponent,
       ],
       imports: [
         BrowserAnimationsModule,
@@ -38,10 +39,6 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
-
-    const sReq = httpMock.expectOne(component.diagramUrl);
-    expect(sReq.request.method).toEqual('GET');
-    sReq.flush(BPMN_DIAGRAM);
   }));
 
 
@@ -64,6 +61,38 @@ describe('AppComponent', () => {
     });
 
     expect(component.importError).toEqual(error);
+  });
+
+  it('sets warning messages', () => {
+    const warnings: BpmnWarning[] = [{
+      message: 'WARNING'
+    }];
+
+    component.handleImported({
+      type: 'success',
+      error: null,
+      warnings: warnings,
+    });
+
+    expect(component.importWarnings).toEqual(warnings);
+  });
+
+  it('loads a diagram', () => {
+    const event = new MouseEvent('click');
+    component['onSubmit'](event);
+
+    const sReq = httpMock.expectOne(component.diagramUrl);
+    expect(sReq.request.method).toEqual('GET');
+    sReq.flush(BPMN_DIAGRAM);
+  });
+
+  it('loads a diagram with warnings', () => {
+    const event = new MouseEvent('click');
+    component['onSubmit'](event);
+
+    const sReq = httpMock.expectOne(component.diagramUrl);
+    expect(sReq.request.method).toEqual('GET');
+    sReq.flush(BPMN_DIAGRAM_WITH_WARNINGS);
   });
 
 });
