@@ -5,9 +5,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialFileInputModule} from 'ngx-material-file-input';
 import {AppComponent} from './app.component';
 import {DiagramComponent} from './diagram/diagram.component';
 
@@ -25,8 +28,11 @@ import {DiagramComponent} from './diagram/diagram.component';
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    ReactiveFormsModule,
+    MatMenuModule,
+    MatTabsModule,
     MatToolbarModule,
+    MaterialFileInputModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent]
 })

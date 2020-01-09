@@ -1,18 +1,47 @@
-<mat-toolbar [ngClass]="{'expanded': showOpenFileDialog}">
+<mat-toolbar [ngClass]="{'expanded': expandToolbar}">
   <mat-toolbar-row>
-    <button mat-icon-button (click)="diagram.createNewDiagram()" title="Create new BPMN diagram"><mat-icon>insert_drive_file</mat-icon></button>
-    <button mat-icon-button (click)="showOpenFileDialog = !showOpenFileDialog" title="Open diagram"><mat-icon>folder</mat-icon></button>
-    <button mat-icon-button (click)="diagram.saveDiagram()" title="Save diagram"><mat-icon>save</mat-icon></button>
-    <button mat-icon-button (click)="diagram.saveSVG()" title="Export as SVG image"><mat-icon>image</mat-icon></button>
-    <button mat-icon-button (click)="diagram.saveXML()" title="Export as XML"><mat-icon>code</mat-icon></button>
+    <button mat-button (click)="diagram.createNewDiagram()" title="Create new BPMN diagram"><mat-icon>insert_drive_file</mat-icon></button>
+
+    <button mat-button [matMenuTriggerFor]="importMenu" title="Open diagram">
+      <mat-icon>folder</mat-icon>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #importMenu="matMenu">
+      <button mat-menu-item (click)="openMethod = 'file'; expandToolbar = true">
+        <mat-icon>code</mat-icon>
+        Open from XML File
+      </button>
+      <button mat-menu-item (click)="openMethod = 'url'; expandToolbar = true">
+        <mat-icon>link</mat-icon>
+        Open from URL
+      </button>
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="downloadMenu" title="Download diagram">
+      <mat-icon>save</mat-icon>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #downloadMenu="matMenu">
+      <button mat-menu-item (click)="diagram.saveSVG()"><mat-icon>image</mat-icon> Download SVG Image</button>
+      <button mat-menu-item (click)="diagram.saveXML()"><mat-icon>code</mat-icon> Download XML File</button>
+    </mat-menu>
   </mat-toolbar-row>
-  <mat-toolbar-row *ngIf="showOpenFileDialog">
-    <mat-form-field>
-      <input name="diagramUrl" [(ngModel)]="diagramUrl" matInput placeholder="Open diagram from URL" type="text">
-    </mat-form-field>
+  <mat-toolbar-row *ngIf="expandToolbar">
+    <ng-container *ngIf="openMethod === 'file'">
+      <mat-form-field (click)="fileInput.click()">
+        <input matInput disabled [value]="getFileName()" type="text">
+        <mat-icon matSuffix>folder_open</mat-icon>
+      </mat-form-field>
+      <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept="text/xml">
+    </ng-container>
+    <ng-container *ngIf="openMethod === 'url'">
+      <mat-form-field>
+        <input name="diagramUrl" [(ngModel)]="diagramUrl" matInput placeholder="Open diagram from URL" type="text">
+      </mat-form-field>
+    </ng-container>
     <button mat-icon-button (click)="onSubmit($event)"><mat-icon>arrow_forward</mat-icon></button>
     <span fxFlex></span>
-    <button mat-icon-button (click)="showOpenFileDialog = false"><mat-icon>close</mat-icon></button>
+    <button mat-icon-button (click)="expandToolbar = false"><mat-icon>close</mat-icon></button>
   </mat-toolbar-row>
 </mat-toolbar>
 <div fxLayout="column">

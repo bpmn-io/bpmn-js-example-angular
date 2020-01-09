@@ -1,3 +1,5 @@
+import {HttpErrorResponse} from '@angular/common/http';
+import {FileChangeEvent} from '@angular/compiler-cli/src/perform_watch';
 import {Component, ViewChild} from '@angular/core';
 import {BPMN_DIAGRAM} from '../testing/mocks/diagram.mocks';
 import {BpmnWarning} from './_interfaces/bpmn-warning';
@@ -16,7 +18,9 @@ export class AppComponent {
   importWarnings?: BpmnWarning[];
   xmlModel: any;
   @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
-  showOpenFileDialog = false;
+  expandToolbar = false;
+  openMethod: string;
+  diagramFile: File;
 
   constructor() {
     this.xmlModel = BPMN_DIAGRAM;
@@ -39,10 +43,41 @@ export class AppComponent {
 
     this.importError = error;
     this.importWarnings = warnings;
+    this.diagramFile = undefined;
+    this.diagramUrl = undefined;
   }
 
-  onSubmit(event: MouseEvent) {
-    this.showOpenFileDialog = false;
-    this.diagramComponent.loadUrl(this.diagramUrl);
+  onSubmit($event: MouseEvent) {
+    this.expandToolbar = false;
+
+    if (this.openMethod === 'url') {
+      this.diagramComponent.loadUrl(this.diagramUrl);
+    } else if (this.openMethod === 'file') {
+      if (this.diagramFile && this.diagramFile.type === 'text/xml') {
+        const reader: FileReader = new FileReader();
+
+        reader.onload = (event: ProgressEvent) => {
+          const xml = (event.target as FileReader).result;
+          this.diagramComponent.openDiagram(xml.toString());
+        };
+
+        reader.readAsText(this.diagramFile);
+      } else {
+        this.handleImported({
+          type: 'error',
+          error: new Error('Wrong file type. Please choose a BPMN XML file.')
+        });
+      }
+    }
+
+    this.openMethod = undefined;
+  }
+
+  getFileName() {
+    return this.diagramFile ? this.diagramFile.name : 'No file selected';
+  }
+
+  onFileSelected($event: Event) {
+    this.diagramFile = ($event.target as HTMLFormElement).files[0];
   }
 }

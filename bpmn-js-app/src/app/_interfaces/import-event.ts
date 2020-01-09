@@ -4,5 +4,5 @@ import {BpmnWarning} from './bpmn-warning';
 export interface ImportEvent {
   type: string;
   warnings?: BpmnWarning[];
-  error?: HttpErrorResponse;
+  error?: HttpErrorResponse | Error;
 }
