@@ -10,7 +10,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MaterialFileInputModule} from 'ngx-material-file-input';
 import {AppComponent} from './app.component';
 import {DiagramComponent} from './diagram/diagram.component';
 
@@ -31,7 +30,6 @@ import {DiagramComponent} from './diagram/diagram.component';
     MatMenuModule,
     MatTabsModule,
     MatToolbarModule,
-    MaterialFileInputModule,
     ReactiveFormsModule,
   ],
   bootstrap: [AppComponent]

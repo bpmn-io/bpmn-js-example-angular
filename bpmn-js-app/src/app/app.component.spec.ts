@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BPMN_DIAGRAM, BPMN_DIAGRAM_WITH_WARNINGS} from '../testing/mocks/diagram.mocks';
@@ -31,6 +32,7 @@ describe('AppComponent', () => {
         FormsModule,
         MatIconModule,
         MatInputModule,
+        MatMenuModule,
         MatToolbarModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -80,6 +82,8 @@ describe('AppComponent', () => {
   });
 
   it('loads a diagram', () => {
+    component.diagramUrl = 'some-url';
+    component.openMethod = 'url';
     const event = new MouseEvent('click');
     component['onSubmit'](event);
 
@@ -89,6 +93,8 @@ describe('AppComponent', () => {
   });
 
   it('loads a diagram with warnings', () => {
+    component.diagramUrl = 'some-url';
+    component.openMethod = 'url';
     const event = new MouseEvent('click');
     component['onSubmit'](event);
 
