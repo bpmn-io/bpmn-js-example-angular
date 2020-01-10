@@ -21,8 +21,9 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
   @ViewChild('containerRef', {static: true}) containerRef: ElementRef;
   @ViewChild('propertiesRef', {static: true}) propertiesRef: ElementRef;
   @Output() private importDone: EventEmitter<ImportEvent> = new EventEmitter();
-  private disabled = false;
   private modeler: BpmnModeler;
+  private xml = '';
+  private disabled = false;
 
   constructor(
     private zone: NgZone,
@@ -30,15 +31,13 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
   ) {
   }
 
-  private _value = '';
-
   get value(): any {
-    return this._value;
+    return this.xml;
   }
 
   ngAfterViewInit() {
     this.initializeModeler();
-    this.openDiagram(this._value);
+    this.openDiagram(this.xml);
   }
 
   onChange(value: any) {
@@ -75,10 +74,10 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
   // Allows Angular to update the model.
   // Update the model and changes needed for the view here.
   writeValue(value: any): void {
-    if (value !== this._value) {
+    if (value !== this.xml) {
       this.openDiagram(value);
     }
-    this._value = value;
+    this.xml = value;
     this.onChange(this.value);
   }
 
@@ -121,7 +120,7 @@ export class DiagramComponent implements ControlValueAccessor, AfterViewInit {
 
   saveDiagram() {
     this.modeler.saveXML({format: true}, (err, xml) => {
-      this._value = xml;
+      this.xml = xml;
       this.writeValue(xml);
     });
   }
