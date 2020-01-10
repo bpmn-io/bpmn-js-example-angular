@@ -1,5 +1,3 @@
-import {HttpErrorResponse} from '@angular/common/http';
-import {FileChangeEvent} from '@angular/compiler-cli/src/perform_watch';
 import {Component, ViewChild} from '@angular/core';
 import {BPMN_DIAGRAM} from '../testing/mocks/diagram.mocks';
 import {BpmnWarning} from './_interfaces/bpmn-warning';
@@ -17,10 +15,10 @@ export class AppComponent {
   importError?: Error;
   importWarnings?: BpmnWarning[];
   xmlModel: any;
-  @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
   expandToolbar = false;
   openMethod: string;
   diagramFile: File;
+  @ViewChild(DiagramComponent, {static: false}) private diagramComponent: DiagramComponent;
 
   constructor() {
     this.xmlModel = BPMN_DIAGRAM;
@@ -54,14 +52,7 @@ export class AppComponent {
       this.diagramComponent.loadUrl(this.diagramUrl);
     } else if (this.openMethod === 'file') {
       if (this.diagramFile && this.diagramFile.type === 'text/xml') {
-        const reader: FileReader = new FileReader();
-
-        reader.onload = (event: ProgressEvent) => {
-          const xml = (event.target as FileReader).result;
-          this.diagramComponent.openDiagram(xml.toString());
-        };
-
-        reader.readAsText(this.diagramFile);
+        this.readFile(this.diagramFile);
       } else {
         this.handleImported({
           type: 'error',
@@ -79,5 +70,17 @@ export class AppComponent {
 
   onFileSelected($event: Event) {
     this.diagramFile = ($event.target as HTMLFormElement).files[0];
+  }
+
+  onLoad(event: ProgressEvent) {
+    const xml = (event.target as FileReader).result;
+    this.diagramComponent.openDiagram(xml.toString());
+  }
+
+  readFile(file: File) {
+    // FileReader must be instantiated this way so unit test can spy on it.
+    const fileReader = new (window as any).FileReader();
+    fileReader.onload = this.onLoad;
+    fileReader.readAsText(file);
   }
 }

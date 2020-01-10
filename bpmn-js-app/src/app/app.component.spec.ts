@@ -42,6 +42,7 @@ describe('AppComponent', () => {
     httpMock = TestBed.get(HttpTestingController);
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.debugElement.componentInstance;
+    component.diagramComponent = TestBed.createComponent(DiagramComponent).componentInstance;
     fixture.detectChanges();
   }));
 
@@ -81,7 +82,7 @@ describe('AppComponent', () => {
     expect(component.importWarnings).toEqual(warnings);
   });
 
-  it('loads a diagram', () => {
+  it('loads a diagram from URL', () => {
     component.diagramUrl = 'some-url';
     component.openMethod = 'url';
     const event = new MouseEvent('click');
@@ -92,7 +93,7 @@ describe('AppComponent', () => {
     sReq.flush(BPMN_DIAGRAM);
   });
 
-  it('loads a diagram with warnings', () => {
+  it('loads a diagram from URL with warnings', () => {
     component.diagramUrl = 'some-url';
     component.openMethod = 'url';
     const event = new MouseEvent('click');
@@ -102,5 +103,61 @@ describe('AppComponent', () => {
     expect(sReq.request.method).toEqual('GET');
     sReq.flush(BPMN_DIAGRAM_WITH_WARNINGS);
   });
+
+  it('loads a diagram from File', () => {
+    const readFileSpy = spyOn(component, 'readFile').and.stub();
+    const newFile = new File([BPMN_DIAGRAM], 'filename.xml', {type: 'text/xml'});
+    component.diagramFile = newFile;
+    component.openMethod = 'file';
+    const event = new MouseEvent('click');
+    component['onSubmit'](event);
+    expect(readFileSpy).toHaveBeenCalledWith(newFile);
+  });
+
+  it('opens a diagram from File', () => {
+    const mockFileReader = {
+      target: {result: BPMN_DIAGRAM},
+      readAsText: (blob) => {
+      }
+    };
+    spyOn((window as any), 'FileReader').and.returnValue(mockFileReader);
+    spyOn(mockFileReader, 'readAsText').and.callFake((blob) => {
+      component.onLoad({target: {result: BPMN_DIAGRAM}});
+    });
+    const openDiagramSpy = spyOn(component.diagramComponent, 'openDiagram').and.stub();
+    const newFile = new File([BPMN_DIAGRAM], 'filename.xml', {type: 'text/xml'});
+    component.readFile(newFile);
+    expect(openDiagramSpy).toHaveBeenCalledWith(BPMN_DIAGRAM);
+  });
+
+  it('loads a diagram from File with error', () => {
+    const handleImportedSpy = spyOn(component, 'handleImported').and.stub();
+
+    component.diagramFile = new File([], 'filename.jpg', {type: 'image/jpeg'});
+    component.openMethod = 'file';
+    const event = new MouseEvent('click');
+    component['onSubmit'](event);
+    const expectedParams = {
+      type: 'error',
+      error: new Error('Wrong file type. Please choose a BPMN XML file.')
+    };
+    expect(handleImportedSpy).toHaveBeenCalledWith(expectedParams);
+  });
+
+  it('should get the diagram file name', () => {
+    expect(component.getFileName()).toEqual('No file selected');
+
+    const filename = 'expected_file_name.jpg';
+    component.diagramFile = new File([], filename, {type: 'image/jpeg'});
+    expect(component.getFileName()).toEqual(filename);
+  });
+
+  it('should get the diagram file from the file input form control', () => {
+    const expectedFile = new File([], 'filename.jpg', {type: 'image/jpeg'});
+    const event = {target: {files: [expectedFile]}};
+    component['onFileSelected'](event);
+    expect(component.diagramFile).toEqual(expectedFile);
+  });
+
 
 });
