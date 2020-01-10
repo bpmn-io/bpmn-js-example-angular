@@ -41,6 +41,8 @@ export class AppComponent {
 
     this.importError = error;
     this.importWarnings = warnings;
+
+    // Clear the inputs
     this.diagramFile = undefined;
     this.diagramUrl = undefined;
   }
