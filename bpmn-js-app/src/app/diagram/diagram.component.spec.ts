@@ -1,7 +1,6 @@
 import {
   async,
   ComponentFixture,
-  getTestBed,
   TestBed
 } from '@angular/core/testing';
 
@@ -54,8 +53,6 @@ describe('DiagramComponent', () => {
   let fixture: ComponentFixture<DiagramComponent>;
   let component: DebugNode['componentInstance'];
 
-  const injector: TestBed = getTestBed();
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -64,7 +61,7 @@ describe('DiagramComponent', () => {
 
     fixture = TestBed.createComponent(DiagramComponent);
     component = fixture.debugElement.componentInstance;
-    httpMock = injector.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   }));
 
