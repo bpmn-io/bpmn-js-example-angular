@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { map, catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 /**
  * You may include a different variant of BpmnJS:
@@ -44,7 +44,7 @@ import { throwError } from 'rxjs';
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
   private bpmnJS: BpmnJS;
 
-  @ViewChild('ref') private el: ElementRef;
+  @ViewChild('ref', { static: true }) private el: ElementRef;
   @Output() private importDone: EventEmitter<any> = new EventEmitter();
 
   @Input() private url: string;
