@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/bpmn-js-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -51,6 +52,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -133,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "bpmn-js-angular"
+  "defaultProject": "bpmn-js-angular",
+  "cli": {
+    "analytics": "be3841e7-e72a-46f0-ab57-b144a4c8961e"
+  }
 }
