@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "bpmn-js-angular"
+  "defaultProject": "bpmn-js-angular",
+  "cli": {
+    "analytics": false
+  }
 }
