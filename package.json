@@ -9,7 +9,7 @@
     "lint": "cd bpmn-js-app && npm run lint",
     "postinstall": "cd bpmn-js-app && npm install",
     "start": "cd bpmn-js-app && npm start",
-    "test": "cd bpmn-js-app && npm test -- --watch=false --no-progress --browsers=ChromeHeadlessCI"
+    "test": "cd bpmn-js-app && npm test -- --watch=false --no-progress --browsers=ChromeHeadless"
   },
   "repository": {
     "type": "git",
