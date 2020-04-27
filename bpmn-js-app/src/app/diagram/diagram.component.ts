@@ -44,7 +44,7 @@ import { throwError } from 'rxjs';
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
   private bpmnJS: BpmnJS;
 
-  @ViewChild('ref') private el: ElementRef;
+  @ViewChild('ref', { static: true }) private el: ElementRef;
   @Output() private importDone: EventEmitter<any> = new EventEmitter();
 
   @Input() private url: string;
