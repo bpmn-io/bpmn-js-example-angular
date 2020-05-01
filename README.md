@@ -25,9 +25,17 @@ import {
   AfterContentInit,
   Component,
   ElementRef,
+  Input,
+  OnChanges,
   OnDestroy,
-  ViewChild
+  Output,
+  ViewChild,
+  SimpleChanges,
+  EventEmitter
 } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 /**
  * You may include a different variant of BpmnJS:
@@ -36,35 +44,61 @@ import {
  *                to navigate them
  * bpmn-modeler - bootstraps a full-fledged BPMN editor
  */
-import * as BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js';
+import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
+
+import { importDiagram } from './rx';
+
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
-  template: `<div #ref class="diagram-container"></div>`,
-  styles: `
-    .diagram-container {
-      height: 100%;
-      width: 100%;
-    }
-  `
+  template: `
+    <div #ref class="diagram-container"></div>
+  `,
+  styles: [
+    `
+      .diagram-container {
+        height: 100%;
+        width: 100%;
+      }
+    `
+  ]
 })
-export class DiagramComponent implements AfterContentInit, OnDestroy {
+export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
+  private bpmnJS: BpmnJS;
 
-  // instantiate BpmnJS with component
-  private viewer: BpmnJS = new BpmnJS();
+  @ViewChild('ref', { static: true }) private el: ElementRef;
+  @Output() private importDone: EventEmitter<any> = new EventEmitter();
 
-  // retrieve DOM element reference
-  @ViewChild('ref') private el: ElementRef;
+  @Input() private url: string;
+
+  constructor(private http: HttpClient) {
+
+    this.bpmnJS = new BpmnJS();
+
+    this.bpmnJS.on('import.done', ({ error }) => {
+      if (!error) {
+        this.bpmnJS.get('canvas').zoom('fit-viewport');
+      }
+    });
+  }
 
   ngAfterContentInit(): void {
-    // attach BpmnJS instance to DOM element
-    this.viewer.attachTo(this.el.nativeElement);
+    this.bpmnJS.attachTo(this.el.nativeElement);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // re-import whenever the url changes
+    if (changes.url) {
+      this.loadUrl(changes.url.currentValue);
+    }
   }
 
   ngOnDestroy(): void {
-    // destroy BpmnJS instance
-    this.viewer.destroy();
+    this.bpmnJS.destroy();
   }
+
+  ...
 
 }
 ```

@@ -100,5 +100,4 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
       )
     );
   }
-
 }
