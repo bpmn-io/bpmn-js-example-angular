@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 /**
  * You may include a different variant of BpmnJS:
@@ -23,9 +23,7 @@ import { catchError } from 'rxjs/operators';
  */
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
 
-import { importDiagram } from './rx';
-
-import { throwError } from 'rxjs';
+import { from, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
@@ -78,12 +76,12 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   /**
    * Load diagram from URL and emit completion event
    */
-  loadUrl(url: string) {
+  loadUrl(url: string): Subscription {
 
     return (
       this.http.get(url, { responseType: 'text' }).pipe(
-        catchError(err => throwError(err)),
-        importDiagram(this.bpmnJS)
+        switchMap((xml: string) => this.importDiagram(xml)),
+        map(result => result.warnings),
       ).subscribe(
         (warnings) => {
           this.importDone.emit({
@@ -99,5 +97,15 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
         }
       )
     );
+  }
+
+  /**
+   * Creates a Promise to import the given XML into the current
+   * BpmnJS instance, then returns it as an Observable.
+   *
+   * @see https://github.com/bpmn-io/bpmn-js-callbacks-to-promises#importxml
+   */
+  private importDiagram(xml: string): Observable<{warnings: Array<any>}> {
+    return from(this.bpmnJS.importXML(xml) as Promise<{warnings: Array<any>}>);
   }
 }
