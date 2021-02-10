@@ -1,8 +1,4 @@
-import {
-  async,
-  ComponentFixture,
-  TestBed
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DebugNode } from '@angular/core';
 
@@ -53,7 +49,7 @@ describe('DiagramComponent', () => {
   let fixture: ComponentFixture<DiagramComponent>;
   let component: DebugNode['componentInstance'];
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [DiagramComponent]
