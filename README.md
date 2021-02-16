@@ -1,6 +1,6 @@
 # bpmn-js-example-angular
 
-[![Build Status](https://travis-ci.com/bpmn-io/bpmn-js-example-angular.svg?branch=master)](https://travis-ci.com/bpmn-io/bpmn-js-example-angular)
+[![CI](https://github.com/bpmn-io/bpmn-js-example-angular/workflows/CI/badge.svg)](https://github.com/bpmn-io/bpmn-js-example-angular/actions?query=workflow%3ACI)
 
 An example how to integrate bpmn-js with an [Angular](https://angular.io/) application.
 
@@ -65,7 +65,7 @@ import { throwError } from 'rxjs';
   ]
 })
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
-  
+
   // instantiate BpmnJS with component
   private bpmnJS: BpmnJS;
 
@@ -102,7 +102,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   ngOnDestroy(): void {
     // destroy BpmnJS instance
     this.bpmnJS.destroy();
- 
+
     this.viewer.attachTo(this.el.nativeElement);
   }
 }
