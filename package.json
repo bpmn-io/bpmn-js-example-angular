@@ -6,7 +6,7 @@
     "all": "run-s lint build test e2e",
     "build": "cd bpmn-js-app && npm run build",
     "dev": "npm run start",
-    "e2e": "cd bpmn-js-app && npm run e2e -- --protractorConfig=e2e/protractor-ci.conf.js",
+    "e2e": "cd bpmn-js-app && npm run e2e -- bpmn-js-angular-e2e-ci",
     "lint": "cd bpmn-js-app && npm run lint",
     "postinstall": "cd bpmn-js-app && npm install",
     "start": "cd bpmn-js-app && npm start",

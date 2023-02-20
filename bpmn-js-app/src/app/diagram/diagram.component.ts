@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild,
   SimpleChanges,
@@ -39,18 +40,14 @@ import { from, Observable, Subscription } from 'rxjs';
     `
   ]
 })
-export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy {
-  private bpmnJS: BpmnJS;
+export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy, OnInit {
 
   @ViewChild('ref', { static: true }) private el: ElementRef;
+  @Input() private url?: string;
   @Output() private importDone: EventEmitter<any> = new EventEmitter();
-
-  @Input() private url: string;
+  private bpmnJS: BpmnJS = new BpmnJS();
 
   constructor(private http: HttpClient) {
-
-    this.bpmnJS = new BpmnJS();
-
     this.bpmnJS.on('import.done', ({ error }) => {
       if (!error) {
         this.bpmnJS.get('canvas').zoom('fit-viewport');
@@ -60,6 +57,12 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
 
   ngAfterContentInit(): void {
     this.bpmnJS.attachTo(this.el.nativeElement);
+  }
+
+  ngOnInit(): void {
+    if (this.url) {
+      this.loadUrl(this.url);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

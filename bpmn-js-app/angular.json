@@ -98,6 +98,15 @@
               "src/assets"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -119,9 +128,32 @@
           }
         }
       }
+    },
+    "bpmn-js-angular-e2e-ci": {
+      "root": "e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor-ci.conf.js",
+            "devServerTarget": "bpmn-js-angular:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "bpmn-js-angular:serve:production"
+            }
+          }
+        }
+      }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics",
+      "@angular-eslint/schematics"
+    ]
   }
 }
