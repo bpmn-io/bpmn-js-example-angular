@@ -120,9 +120,9 @@ npm run all
 ## Additional Resources
 
 * [bpmn-js Examples](https://github.com/bpmn-io/bpmn-js-examples)
-* [bpmn-js Viewer Documentation](https://github.com/bpmn-io/bpmn-js/blob/master/lib/Viewer.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/blob/master/starter/viewer.html)
-* [bpmn-js Modeler Documentation](https://github.com/bpmn-io/bpmn-js/blob/master/lib/Modeler.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/tree/master/modeler)
-* [How to add Keyboard-Bindings](https://forum.bpmn.io/t/hotkeys-like-the-demo/89/2) (cf. [`Keyboard` service](https://github.com/bpmn-io/diagram-js/blob/master/lib/features/keyboard/Keyboard.js))
+* [bpmn-js Viewer Documentation](https://github.com/bpmn-io/bpmn-js/blob/main/lib/Viewer.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/blob/main/starter/viewer.html)
+* [bpmn-js Modeler Documentation](https://github.com/bpmn-io/bpmn-js/blob/main/lib/Modeler.js), [Example](https://github.com/bpmn-io/bpmn-js-examples/tree/main/modeler)
+* [How to add Keyboard-Bindings](https://forum.bpmn.io/t/hotkeys-like-the-demo/89/2) (cf. [`Keyboard` service](https://github.com/bpmn-io/diagram-js/blob/main/lib/features/keyboard/Keyboard.js))
 
 ## License
 
