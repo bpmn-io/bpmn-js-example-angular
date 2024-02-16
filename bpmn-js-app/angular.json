@@ -68,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "bpmn-js-angular:build"
+            "buildTarget": "bpmn-js-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "bpmn-js-angular:build:production"
+              "buildTarget": "bpmn-js-angular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bpmn-js-angular:build"
+            "buildTarget": "bpmn-js-angular:build"
           }
         },
         "test": {
