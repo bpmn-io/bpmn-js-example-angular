@@ -28,5 +28,7 @@ jobs:
           ${{ runner.OS }}-
     - name: Install dependencies
       run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
     - name: Build
       run: npm run all
