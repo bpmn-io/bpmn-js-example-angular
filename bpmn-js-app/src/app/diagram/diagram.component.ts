@@ -15,6 +15,9 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 
+import type Canvas from 'diagram-js/lib/core/Canvas';
+import type { ImportDoneEvent, ImportXMLResult } from 'bpmn-js';
+
 /**
  * You may include a different variant of BpmnJS:
  *
@@ -22,7 +25,7 @@ import { map, switchMap } from 'rxjs/operators';
  *                to navigate them
  * bpmn-modeler - bootstraps a full-fledged BPMN editor
  */
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
+import BpmnJS from 'bpmn-js/lib/Modeler';
 
 import { from, Observable, Subscription } from 'rxjs';
 
@@ -44,13 +47,13 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
 
   @ViewChild('ref', { static: true }) private el: ElementRef;
   @Input() private url?: string;
-  @Output() private importDone: EventEmitter<any> = new EventEmitter();
+  @Output() private importDone: EventEmitter<ImportDoneEvent> = new EventEmitter();
   private bpmnJS: BpmnJS = new BpmnJS();
 
   constructor(private http: HttpClient) {
-    this.bpmnJS.on('import.done', ({ error }) => {
+    this.bpmnJS.on<ImportDoneEvent>('import.done', ({ error }) => {
       if (!error) {
-        this.bpmnJS.get('canvas').zoom('fit-viewport');
+        this.bpmnJS.get<Canvas>('canvas').zoom('fit-viewport');
       }
     });
   }
@@ -108,7 +111,7 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
    *
    * @see https://github.com/bpmn-io/bpmn-js-callbacks-to-promises#importxml
    */
-  private importDiagram(xml: string): Observable<{warnings: Array<any>}> {
-    return from(this.bpmnJS.importXML(xml) as Promise<{warnings: Array<any>}>);
+  private importDiagram(xml: string): Observable<ImportXMLResult> {
+    return from(this.bpmnJS.importXML(xml));
   }
 }
