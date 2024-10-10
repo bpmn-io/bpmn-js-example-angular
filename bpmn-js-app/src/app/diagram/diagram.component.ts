@@ -18,6 +18,8 @@ import { map, switchMap } from 'rxjs/operators';
 import type Canvas from 'diagram-js/lib/core/Canvas';
 import type { ImportDoneEvent, ImportXMLResult } from 'bpmn-js';
 
+import { diff } from 'bpmn-js-differ';
+
 /**
  * You may include a different variant of BpmnJS:
  *
@@ -56,6 +58,10 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
         this.bpmnJS.get<Canvas>('canvas').zoom('fit-viewport');
       }
     });
+
+    this.bpmnJS.on('non-existing', () => {
+      diff('a', 'b');
+    })
   }
 
   ngAfterContentInit(): void {
