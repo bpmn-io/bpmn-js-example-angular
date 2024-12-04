@@ -18,6 +18,16 @@ cd bpmn-js-app
 
 ## Integrating bpmn-js
 
+Include the style files for diagram-js and bpmn in your [`Angular.json file`](./bpmn-js-app/angular.json) under projects > your project > architect > build > options > styles
+
+```json
+"styles": [
+              "node_modules/bpmn-js/dist/assets/diagram-js.css",
+              "node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
+              "src/styles.css"
+            ],
+```
+
 Create a component similar to [`DiagramComponent`](./bpmn-js-app/src/app/diagram/diagram.component.ts):
 
 ```typescript
