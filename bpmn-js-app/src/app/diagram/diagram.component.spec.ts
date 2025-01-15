@@ -81,7 +81,6 @@ describe('DiagramComponent', () => {
     component.importDone.subscribe(result => {
       // then
       expect(result).toEqual({
-        type: 'success',
         warnings: []
       });
 
@@ -104,7 +103,7 @@ describe('DiagramComponent', () => {
 
     component.importDone.subscribe(result => {
       // then
-      expect(result.type).toEqual('success');
+      expect(result.error).toBeUndefined();
 
       expect(result.warnings.length).toEqual(1);
       expect(result.warnings[0].message).toContain('unparsable content <process> detected');
@@ -132,7 +131,7 @@ describe('DiagramComponent', () => {
     component.importDone.subscribe(result => {
 
       // then
-      expect(result.type).toEqual('error');
+      expect(result.error).toBeDefined();
       expect(result.error.message).toEqual('Http failure response for some-url: 404 FOO');
 
       done();

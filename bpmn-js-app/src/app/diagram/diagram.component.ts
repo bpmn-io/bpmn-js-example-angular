@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 
 import type Canvas from 'diagram-js/lib/core/Canvas';
-import type { ImportDoneEvent, ImportXMLResult } from 'bpmn-js';
+import type { ImportDoneEvent, ImportXMLResult } from 'bpmn-js/lib/BaseViewer';
 
 /**
  * You may include a different variant of BpmnJS:
@@ -91,14 +91,13 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy,
       ).subscribe(
         (warnings) => {
           this.importDone.emit({
-            type: 'success',
             warnings
           });
         },
         (err) => {
           this.importDone.emit({
-            type: 'error',
-            error: err
+            error: err,
+            warnings: []
           });
         }
       )

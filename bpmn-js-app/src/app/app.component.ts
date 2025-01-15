@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import type { ImportDoneEvent } from 'bpmn-js/lib/BaseViewer';
+
 
 @Component({
   selector: 'app-root',
@@ -10,19 +12,16 @@ export class AppComponent {
   diagramUrl = 'https://cdn.statically.io/gh/bpmn-io/bpmn-js-examples/dfceecba/starter/diagram.bpmn';
   importError?: Error;
 
-  handleImported(event) {
+  handleImported(event: ImportDoneEvent) {
 
     const {
-      type,
       error,
       warnings
     } = event;
 
-    if (type === 'success') {
+    if (!error) {
       console.log(`Rendered diagram (%s warnings)`, warnings.length);
-    }
-
-    if (type === 'error') {
+    } else {
       console.error('Failed to render diagram', error);
     }
 
