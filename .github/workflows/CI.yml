@@ -22,6 +22,7 @@ jobs:
     - name: Setup project
       uses: bpmn-io/actions/setup@latest
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install
+      working-directory: ./bpmn-js-app
     - name: Build
       run: npm run all
