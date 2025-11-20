@@ -23,7 +23,7 @@
     "core-js": "^3.6.5",
     "rxjs": "~6.6.2",
     "tslib": "^2.0.0",
-    "zone.js": "~0.14.4"
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.2.0",
