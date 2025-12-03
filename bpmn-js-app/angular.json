@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "../node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -23,9 +23,9 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bpmn-js/dist/assets/diagram-js.css",
-              "node_modules/bpmn-js/dist/assets/bpmn-js.css",
-              "node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
+              "../node_modules/bpmn-js/dist/assets/diagram-js.css",
+              "../node_modules/bpmn-js/dist/assets/bpmn-js.css",
+              "../node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
               "src/styles.css"
             ],
             "scripts": [],

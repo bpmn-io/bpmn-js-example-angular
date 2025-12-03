@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DebugNode } from '@angular/core';
 
 import {
-  HttpClientTestingModule,
+  provideHttpClientTesting,
   HttpTestingController
 } from '@angular/common/http/testing';
 
@@ -51,8 +51,9 @@ describe('DiagramComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [DiagramComponent]
+      providers: [
+        provideHttpClientTesting()
+      ]
     });
 
     fixture = TestBed.createComponent(DiagramComponent);

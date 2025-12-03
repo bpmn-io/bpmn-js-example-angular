@@ -4,13 +4,12 @@
   "description": "An example how to integrate bpmn-js with an Angular application",
   "scripts": {
     "all": "run-s lint build test e2e",
-    "build": "cd bpmn-js-app && npm run build",
+    "build": "npm run build -w bpmn-js-app",
     "dev": "npm run start",
-    "e2e": "cd bpmn-js-app && npm run e2e",
-    "lint": "cd bpmn-js-app && npm run lint",
-    "postinstall": "cd bpmn-js-app && npm install",
-    "start": "cd bpmn-js-app && npm start",
-    "test": "cd bpmn-js-app && npm test -- --watch=false --no-progress --browsers=ChromeHeadless"
+    "e2e": "npm run e2e -w bpmn-js-app",
+    "lint": "npm run lint -w bpmn-js-app",
+    "start": "npm run start -w bpmn-js-app",
+    "test": "npm test -w bpmn-js-app -- --watch=false --no-progress --browsers=ChromeHeadless"
   },
   "repository": {
     "type": "git",
@@ -24,5 +23,8 @@
   "license": "MIT",
   "devDependencies": {
     "npm-run-all2": "^8.0.0"
-  }
+  },
+  "workspaces": [
+    "bpmn-js-app"
+  ]
 }

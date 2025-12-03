@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import type { ImportDoneEvent } from 'bpmn-js/lib/BaseViewer';
+import { DiagramComponent } from './diagram/diagram.component';
 
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [DiagramComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

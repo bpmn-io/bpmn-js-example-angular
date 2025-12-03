@@ -1,7 +1,5 @@
 import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
-import { DiagramComponent } from './diagram/diagram.component';
 import { DebugNode } from '@angular/core';
 
 describe('AppComponent', () => {
@@ -10,13 +8,7 @@ describe('AppComponent', () => {
   let component: DebugNode['componentInstance'];
 
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        DiagramComponent
-      ],
-      imports: [HttpClientTestingModule]
-    }).compileComponents();
+    TestBed.configureTestingModule({}).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
