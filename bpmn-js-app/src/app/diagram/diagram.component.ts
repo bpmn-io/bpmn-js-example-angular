@@ -1,16 +1,4 @@
-import {
-  AfterContentInit,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  SimpleChanges,
-  EventEmitter
-} from '@angular/core';
+import { AfterContentInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, SimpleChanges, EventEmitter, inject } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
@@ -31,6 +19,7 @@ import { from, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
+  standalone: true,
   template: `
     <div #ref class="diagram-container"></div>
   `,
@@ -44,13 +33,14 @@ import { from, Observable, Subscription } from 'rxjs';
   ]
 })
 export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy, OnInit {
+  private http = inject(HttpClient);
 
-  @ViewChild('ref', { static: true }) private el: ElementRef;
+  @ViewChild('ref', { static: true }) private el!: ElementRef;
   @Input() private url?: string;
   @Output() private importDone: EventEmitter<ImportDoneEvent> = new EventEmitter();
   private bpmnJS: BpmnJS = new BpmnJS();
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.bpmnJS.on<ImportDoneEvent>('import.done', ({ error }) => {
       if (!error) {
         this.bpmnJS.get<Canvas>('canvas').zoom('fit-viewport');
