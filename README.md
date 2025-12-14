@@ -37,7 +37,6 @@ import {
   Component,
   ElementRef,
   Input,
-  inject,
   OnChanges,
   OnDestroy,
   Output,
@@ -47,7 +46,7 @@ import {
 } from '@angular/core';
 
 import type Canvas from 'diagram-js/lib/core/Canvas';
-import type { ImportDoneEvent, ImportXMLResult } from 'bpmn-js/lib/BaseViewer';
+import type { ImportDoneEvent } from 'bpmn-js/lib/BaseViewer';
 
 /**
  * You may include a different variant of BpmnJS:
