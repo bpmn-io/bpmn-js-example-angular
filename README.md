@@ -45,8 +45,8 @@ import {
   EventEmitter
 } from '@angular/core';
 
-import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import type Canvas from 'diagram-js/lib/core/Canvas';
+import type { ImportDoneEvent } from 'bpmn-js/lib/BaseViewer';
 
 /**
  * You may include a different variant of BpmnJS:
@@ -56,10 +56,6 @@ import { catchError } from 'rxjs/operators';
  * bpmn-modeler - bootstraps a full-fledged BPMN editor
  */
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
-
-import { importDiagram } from './rx';
-
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-diagram',
@@ -83,17 +79,15 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   // retrieve DOM element reference
   @ViewChild('ref', { static: true }) private el: ElementRef;
 
-  @Output() private importDone: EventEmitter<any> = new EventEmitter();
-
   @Input() private url: string;
 
-  constructor(private http: HttpClient) {
+  constructor() {
 
     this.bpmnJS = new BpmnJS();
 
-    this.bpmnJS.on('import.done', ({ error }) => {
+    this.bpmnJS.on<ImportDoneEvent>('import.done', ({ error }) => {
       if (!error) {
-        this.bpmnJS.get('canvas').zoom('fit-viewport');
+        this.bpmnJS.get<Canvas>('canvas').zoom('fit-viewport');
       }
     });
   }
@@ -106,18 +100,21 @@ export class DiagramComponent implements AfterContentInit, OnChanges, OnDestroy 
   ngOnChanges(changes: SimpleChanges) {
     // re-import whenever the url changes
     if (changes.url) {
-      this.loadUrl(changes.url.currentValue);
+      this.loadUrl(changes.url.currentValue).then(xml => {
+        return this.bpmnJS.importXML(xml);
+      });
     }
   }
 
   ngOnDestroy(): void {
     // destroy BpmnJS instance
     this.bpmnJS.destroy();
+  }
 
-    this.viewer.attachTo(this.el.nativeElement);
+  private loadUrl(url: string) : Promise<string> {
+    throw new Error('not implemented - return diagram XML from url');
   }
 }
-
 ```
 
 
