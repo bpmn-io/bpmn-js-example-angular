@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { DebugNode } from '@angular/core';
 
@@ -7,12 +7,12 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: DebugNode['componentInstance'];
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({}).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
 
   it('should create', () => {
