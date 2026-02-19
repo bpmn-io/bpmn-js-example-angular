@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DebugNode } from '@angular/core';
 
@@ -49,7 +49,7 @@ describe('DiagramComponent', () => {
   let fixture: ComponentFixture<DiagramComponent>;
   let component: DebugNode['componentInstance'];
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClientTesting()
@@ -60,7 +60,7 @@ describe('DiagramComponent', () => {
     component = fixture.debugElement.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-  }));
+  });
 
   afterEach(() => {
     httpMock.verify();
