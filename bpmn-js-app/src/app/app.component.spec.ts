@@ -7,8 +7,8 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: DebugNode['componentInstance'];
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({}).compileComponents();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({}).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
