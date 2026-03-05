@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.1.4",
-    "@angular-eslint/builder": "21.2.0",
+    "@angular-eslint/builder": "21.3.0",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.5",
     "@angular/language-service": "^21.1.5",
@@ -37,7 +37,7 @@
     "@types/jasmine": "~6.0.0",
     "@types/jasminewd2": "~2.0.13",
     "@types/node": "^25.3.0",
-    "angular-eslint": "21.2.0",
+    "angular-eslint": "21.3.0",
     "eslint": "^9.39.1",
     "jasmine-core": "~6.0.1",
     "jasmine-spec-reporter": "^7.0.0",
