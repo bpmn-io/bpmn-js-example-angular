@@ -1,10 +1,10 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = async function (config) {
 
   if (config.browsers.indexOf('ChromeHeadless') !== -1) {
-    process.env.CHROME_BIN = require('puppeteer').executablePath();
+    process.env.CHROME_BIN = await require('puppeteer').executablePath();
   }
 
   config.set({
