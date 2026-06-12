@@ -10,6 +10,12 @@ import {
 import { DiagramComponent } from './diagram.component';
 
 
+type ImportResult = {
+  error?: { message: string };
+  warnings: { message: string }[];
+};
+
+
 const BPMN_DIAGRAM = `
   <?xml version="1.0" encoding="UTF-8"?>
   <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
@@ -79,7 +85,7 @@ describe('DiagramComponent', () => {
     // given
     const diagramURL = 'some-url';
 
-    component.importDone.subscribe((result: any) => {
+    component.importDone.subscribe((result: ImportResult) => {
       // then
       expect(result).toEqual({
         warnings: []
@@ -102,7 +108,7 @@ describe('DiagramComponent', () => {
     // given
     const diagramURL = 'some-url';
 
-    component.importDone.subscribe((result: any) => {
+    component.importDone.subscribe((result: ImportResult) => {
       // then
       expect(result.error).toBeUndefined();
 
@@ -129,11 +135,11 @@ describe('DiagramComponent', () => {
     // when
     component.loadUrl(diagramURL);
 
-    component.importDone.subscribe((result: any) => {
+    component.importDone.subscribe((result: ImportResult) => {
 
       // then
       expect(result.error).toBeDefined();
-      expect(result.error.message).toEqual('Http failure response for some-url: 404 FOO');
+      expect(result.error!.message).toEqual('Http failure response for some-url: 404 FOO');
 
       done();
     });
