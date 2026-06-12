@@ -79,7 +79,7 @@ describe('DiagramComponent', () => {
     // given
     const diagramURL = 'some-url';
 
-    component.importDone.subscribe(result => {
+    component.importDone.subscribe((result: any) => {
       // then
       expect(result).toEqual({
         warnings: []
@@ -102,7 +102,7 @@ describe('DiagramComponent', () => {
     // given
     const diagramURL = 'some-url';
 
-    component.importDone.subscribe(result => {
+    component.importDone.subscribe((result: any) => {
       // then
       expect(result.error).toBeUndefined();
 
@@ -129,7 +129,7 @@ describe('DiagramComponent', () => {
     // when
     component.loadUrl(diagramURL);
 
-    component.importDone.subscribe(result => {
+    component.importDone.subscribe((result: any) => {
 
       // then
       expect(result.error).toBeDefined();
